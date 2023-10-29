@@ -51,10 +51,8 @@ int Ny = 10*2+1;
 int Npt = 40*2+1;
 double y_min = -5.0;
 double y_max = 5.0;
-double dy = (y_max - y_min) / (Ny-1);
 double ptmin = 0.1;
 double ptmax = 40.1;
-double dpt = (ptmax - ptmin) / (Npt-1);
 
 void print_line() {
     for (int i=0;i<100;i++) cout << "-"; cout << endl;
