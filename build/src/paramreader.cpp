@@ -32,7 +32,12 @@ void setParameter(const char *key, const char *value) {
     if (strcmp(key,"p0")==0) p0=atof(value);
     if (strcmp(key,"m")==0) m=atof(value);
     if (strcmp(key,"n")==0) n=atof(value);
-    //if (strcmp(key,"N")==0) N=atof(value);
+    if (strcmp(key,"Ny")==0) Ny=atof(value);
+    if (strcmp(key,"Npt")==0) Npt=atof(value);
+    if (strcmp(key,"y_min")==0) y_min=atof(value);
+    if (strcmp(key,"y_max")==0) y_max=atof(value);
+    if (strcmp(key,"ptmin")==0) ptmin=atof(value);
+    if (strcmp(key,"ptmax")==0) ptmax=atof(value);
 
     return;
 }
@@ -85,4 +90,6 @@ void processParameters() {
     beamRap = acosh(rootsnn / (2.0 * massp));
     xA0 = 1.0 / (2.0 * massp * lA / HBARC);
     xB0 = 1.0 / (2.0 * massp * lB / HBARC);
+    dy = (y_max - y_min) / (Ny-1);
+    dpt = (ptmax - ptmin) / (Npt-1);
 }

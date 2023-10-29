@@ -23,5 +23,6 @@ struct Parameters
 };
 
 extern int nc,Ny,Npt;
+extern double y_min,y_max,ptmin,ptmax, dy, dpt;
 extern double alphas,massQQ,lambdaQCD,qhat0,lp,lA,lB;
 extern double massp,rootsnn,p0,m,n,beamRap,xA0,xB0;

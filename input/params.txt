@@ -59,6 +59,13 @@ m             2.8
 // Parameter n
 n             13.8    
 
-// Parameter N (number of pt or y points)
-N             100        
+// Parameters for integration (pt, y points)
+Npt           10*2+1     
+Ny            40*2+1
+y_min	      -5.0
+y_min	      5.0
+ptmin	      0.1
+ptmax         40.1
+
+        
 
