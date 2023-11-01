@@ -25,9 +25,8 @@ using namespace std;
 //
 // Global params; these default values are overridden by the params file
 //
-int nc = 3;
-double alphas = 0.5; //
-double massQQ = 9.46; // Mass of Quarkonium
+int nc = 3; 
+double alphas = 0.5; // QCD coupling constant
 double lambdaQCD = 0.25;
 double qhat0 = 0.075; // GeV^2/fm
 double lp = 1.5; // in fm
@@ -36,15 +35,20 @@ double lB = 10.11; // in fm
 double massp = 0.938; // mass of proton in GeV, it can also be 1 GeV
 double rootsnn = 5023; // collision energy, sqrt(s_NN)
 
-// parameters useful in the pp cross-section parametrization
+// Computed from params file
+double beamRap, xA0, xB0;
+
+//DEFAULT-- Upsilon-- parameters useful in the pp cross-section parametrization
+double massQQ = 9.46; //Upsilon mass
 double p0 = 6.6; // in GeV for Upsilon State at 7 TeV
 double m = 2.8;
 double n = 13.8;
 
-// Computed from params file
-double beamRap = acosh(rootsnn / (2.0 * massp));
-double xA0 = 1.0 / (2.0 * massp * lA / HBARC);
-double xB0 = 1.0 / (2.0 * massp * lB / HBARC);
+// J/Psi -- parameters useful in the pp cross-section parametrization
+//double massQQ = 3.0969; //J/Psi mass
+//double p0 = 4.2; // in GeV for J/Psi State at 7 TeV
+//double m = 3.5;
+//double n = 19.0;
 
 // Parameters for loops in y and pt
 int Ny = 10*2+1;
@@ -142,7 +146,8 @@ double PhatA(double z, double y, double pt) {
     double exponent = alphas * nc * (polylog1_result - polylog2_result) / (2 * M_PI);
     double logterms = 2 * log(1 + lA2(y, pt) / (z * z * Mperp2(pt))) / z - 2 * log(1 + LambdaAp2(y, pt) / (z * z * Mperp2(pt))) / z;
     double result = alphas * exp(exponent) * nc * logterms / (2 * M_PI);
-    return result;
+    if (lA == lp){return 1;}
+    else {return result;}
 }
 
 double PhatB(double z, double y, double pt) {
@@ -151,7 +156,8 @@ double PhatB(double z, double y, double pt) {
     double exponent = alphas * nc * (polylog3_result - polylog4_result) / (2 * M_PI);
     double logterms = 2 * log(1 + lB2(y, pt) / (z * z * Mperp2(pt))) / z - 2 * log(1 + LambdaBp2(y, pt) / (z * z * Mperp2(pt))) / z;
     double result = alphas * exp(exponent) * nc * logterms / (2 * M_PI);
-    return result;
+    if (lB == lp){return 1;}
+    else {return result;}
 }
 
 //pp-cross section parametrization
@@ -195,13 +201,12 @@ int scaledIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cuba
     double phatAVal = PhatA(exp(exp(ua)) - 1, -p->y, p->pt);
     double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt);
     double dsigVal = dsigdyd2pt(p->y + exp(ub) - exp(ua), shiftedPt);
-    
     ff[0] = exp(ub) * exp(ua) * phatBVal * phatAVal * dsigVal;
-
+   
     return 0;
 }
 
-void AACrossSection(double y, double pt, double* res, double* err) {
+void ABCrossSection(double y, double pt, double* res, double* err) {
     
     if (fabs(y) > ymax(pt)) {
         //cout << "==> INFO:  |y| greater than ymax(pt)!" << endl;
@@ -229,7 +234,7 @@ void AACrossSection(double y, double pt, double* res, double* err) {
     if (fail==1) cout << "Error during integration." << endl;
         
     *res = (p.ubMax-uMin)*(p.uaMax-uMin)*integral_result;
-    *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;
+    *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;   
 }
 
 int main()
@@ -248,7 +253,6 @@ int main()
     create_output_directory();
     
     print_line(); // cosmetic
-        
     string filename_1 = "output/AB-cross-section.tsv";
     string filename_2 = "output/pp-cross-section.tsv";
     string filename_3 = "output/RAB.tsv";
@@ -260,8 +264,8 @@ int main()
         double y = y_min + i * dy;
         for (int j=0; j<Npt; j++) {
             double pt = ptmin + j * dpt;
-            // compute AA cross section
-            AACrossSection(y, pt, &result, &error);
+            // compute AB cross section
+            ABCrossSection(y, pt, &result, &error);
             cout << y << "\t" << pt << "\t" << result << "\t" << error << endl;
             output_file_1 << y << "\t" << pt << "\t" << result << "\t" << error << endl;
             // output pp cross section

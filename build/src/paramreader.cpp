@@ -92,4 +92,14 @@ void processParameters() {
     xB0 = 1.0 / (2.0 * massp * lB / HBARC);
     dy = (y_max - y_min) / (Ny-1);
     dpt = (ptmax - ptmin) / (Npt-1);
+    
+    if (massQQ == 9.46) { 
+        p0 = 6.6;
+        m = 2.8;
+        n = 13.8;
+    } else if (massQQ == 3.0969) {
+        p0 = 4.2;
+        m = 3.5;
+        n = 19.0;
+    }
 }

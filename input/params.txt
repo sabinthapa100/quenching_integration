@@ -13,6 +13,9 @@ alphas        0.5
 // Mass of Quarkonium (Upsilon) in GeV
 massQQ        9.46       
 
+// Mass of Quarkonium (UJ/Psi) in GeV
+//massQQ        3.0969
+
 // QCD scale (Lambda QCD) in GeV
 lambdaQCD     0.25        
 
@@ -22,15 +25,14 @@ qhat0         0.075
 // ------------------------------------------------
 // Effective Path Lengths:
 // ------------------------------------------------
-
 // Proton-nuclei effective path length (Lp) in fm
-lp            1.5         
+lp            1.5     
 
 // Nuclei A effective path length (LA) in fm (e.g., lead nuclei)
 lA            10.11       
 
 // Nuclei B effective path length (LB) in fm (e.g., lead nuclei)
-lB            10.11       
+lB            10.11
 
 // ------------------------------------------------
 // Proton Parameters:
@@ -47,30 +49,25 @@ massp         0.938
 rootsnn       5023        
 
 // ------------------------------------------------
-// Parameters for Cross-Section Parametrization:
+// Parameters for Cross-Section Parametrization (p0,m,n):
 // ------------------------------------------------
-
 // Parameter p0 in GeV for Upsilon State at 7 TeV
-p0            6.6         
-
-// Parameter m
-m             2.8         
-
-// Parameter n
-n             13.8    
+//p0            6.6         
+//m             2.8         
+//n             13.8    
 
 // Parameters for integration (pt, y points)
-Npt           10*2+1    
+Ny            21   
  
-Ny            40*2+1
+Npt           81
 
-y_min	      -5.0
+y_min	     -5.0
 
-y_max	      5.0
+y_max	     5.0
 
-ptmin	      0.1
+ptmin	     0.1
 
-ptmax         40.1
+ptmax        40.1
 
         
 
