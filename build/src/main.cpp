@@ -177,14 +177,39 @@ inline double dsigdyd2pt(double y, double pt) {
     return f1Val * f2Val;
 }
 
-//calculation of momentum shift
-inline double shiftedPT(double pt, double dptb, double dpta, double phiB, double phiA) {
+//calculation of momentum shift (for pA)
+inline double shiftedPTpA(double pt, double dpta, double phiA) {
+    double root = - dpta + cos(phiA) * pt + sin(phiA) * pt;
+    return sqrt(pow(-dpta + cos(phiA) * pt, 2) + pow(sin(phiA) * pt, 2));;
+}
+
+//calculation of momentum shift (for AB)
+inline double shiftedPTAB(double pt, double dptb, double dpta, double phiB, double phiA) {
     double component1 = pt - dpta * cos(phiA) - dptb * cos(phiB);
     double component2 = dpta * sin(phiA) + dptb * sin(phiB);
     return sqrt(component1 * component1 + component2 * component2);
 }
 
-int scaledIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata)
+int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata)
+{
+    Parameters* p = reinterpret_cast<Parameters*>(userdata);
+    
+    // Rescale ua and phiA to [0,1] 
+    // scaled values
+    double ua = uMin + xx[0]*(p->uaMax-uMin);
+    double phiA = xx[1]*2*M_PI;
+
+    double dpta = dptA(p->y,p->pt);
+    double shiftedPt = shiftedPTpA(p->pt, dpta, phiA);
+    double phatAVal = PhatA(exp(exp(ua)) - 1, p->y, p->pt);
+    double dsigVal = dsigdyd2pt(p->y + exp(ua), shiftedPt);
+    
+    ff[0] = exp(ua) * phatAVal * dsigVal;
+       
+    return 0;
+}
+
+int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata)
 {
     Parameters* p = reinterpret_cast<Parameters*>(userdata);
     
@@ -197,13 +222,44 @@ int scaledIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cuba
     
     double dptb = dptB(p->y,p->pt);
     double dpta = dptA(-p->y,p->pt);
-    double shiftedPt = shiftedPT(p->pt, dptb, dpta, phiB, phiA);
+    double shiftedPt = shiftedPTAB(p->pt, dptb, dpta, phiB, phiA);
     double phatAVal = PhatA(exp(exp(ua)) - 1, -p->y, p->pt);
     double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt);
     double dsigVal = dsigdyd2pt(p->y + exp(ub) - exp(ua), shiftedPt);
     ff[0] = exp(ub) * exp(ua) * phatBVal * phatAVal * dsigVal;
-   
+       
     return 0;
+}
+
+
+void pACrossSection(double y, double pt, double* res, double* err) {
+    
+    if (fabs(y) > ymax(pt)) {
+        //cout << "==> INFO:  |y| greater than ymax(pt)!" << endl;
+        *res = 1e-30;
+        *err = 1e-30;
+        return;
+    }
+    
+    Parameters p;
+    p.y = y;
+    p.pt = pt;
+    p.uaMax = log(dymax(p.y, p.pt));
+        
+    // Integration parameters
+    cubareal integral_result, error, prob;
+    int nregions, neval, fail;
+    
+    Cuhre(
+          NDIM2, NCOMP, scaledpAIntegrand, &p, NVEC, epsrel, epsabs, VERBOSE | LAST,
+          MINEVAL, maxeval, KEY, nullptr, nullptr, &nregions, &neval, &fail,
+          &integral_result, &error, &prob
+          );
+    
+    if (fail==1) cout << "Error during integration." << endl;
+        
+    *res = (p.uaMax-uMin)*integral_result;
+    *err = (p.uaMax-uMin)*error;   
 }
 
 void ABCrossSection(double y, double pt, double* res, double* err) {
@@ -226,7 +282,7 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     int nregions, neval, fail;
     
     Cuhre(
-          NDIM, NCOMP, scaledIntegrand, &p, NVEC, epsrel, epsabs, VERBOSE | LAST,
+          NDIM4, NCOMP, scaledABIntegrand, &p, NVEC, epsrel, epsabs, VERBOSE | LAST,
           MINEVAL, maxeval, KEY, nullptr, nullptr, &nregions, &neval, &fail,
           &integral_result, &error, &prob
           );
@@ -255,10 +311,14 @@ int main()
     print_line(); // cosmetic
     string filename_1 = "output/AB-cross-section.tsv";
     string filename_2 = "output/pp-cross-section.tsv";
-    string filename_3 = "output/RAB.tsv";
+    string filename_3 = "output/pA-cross-section.tsv";
+    string filename_4 = "output/RAB.tsv";
+    string filename_5 = "output/RpA.tsv";
     ofstream output_file_1(filename_1);
     ofstream output_file_2(filename_2);
     ofstream output_file_3(filename_3);
+    ofstream output_file_4(filename_4);
+    ofstream output_file_5(filename_5);
     double result, error, result2, result3, error3;
     for (int i=0; i<Ny; i++) {
         double y = y_min + i * dy;
@@ -268,18 +328,32 @@ int main()
             ABCrossSection(y, pt, &result, &error);
             cout << y << "\t" << pt << "\t" << result << "\t" << error << endl;
             output_file_1 << y << "\t" << pt << "\t" << result << "\t" << error << endl;
+           
             // output pp cross section
             result2 = dsigdyd2pt(y,pt);
             output_file_2 << y << "\t" << pt << "\t" << result2 << endl;
+            
+            // compute pA cross section
+            pACrossSection(y, pt, &result3, &error);
+            cout << y << "\t" << pt << "\t" << result3 << "\t" << error << endl;
+            output_file_3 << y << "\t" << pt << "\t" << result3 << "\t" << error << endl;
+            
             // output RAB cross section
-            result3 = result/result2;
-            error3 = error/result2;
-            output_file_3 << y << "\t" << pt << "\t" << result3 << "\t" << error3 << endl;
+            double result4 = result/result2;
+            double error4 = error/result2;
+            output_file_4 << y << "\t" << pt << "\t" << result4 << "\t" << error4 << endl;
+           
+            // output RpA cross section
+            double result5 = result/result3;
+            double error5 = error/result3;
+            output_file_5 << y << "\t" << pt << "\t" << result5 << "\t" << error5 << endl;
         }
     }
     output_file_1.close();
     output_file_2.close();
     output_file_3.close();
+    output_file_4.close();
+    output_file_5.close();
     
     
     // print done!

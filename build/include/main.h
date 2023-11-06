@@ -1,5 +1,6 @@
-#define NDIM 4
-#define NCOMP 1
+#define NDIM2 2 //2-D integral
+#define NDIM4 4 //4-D integral
+#define NCOMP 1 
 #define NVEC 1
 #define VERBOSE 0
 #define LAST 0
