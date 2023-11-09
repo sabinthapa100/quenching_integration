@@ -179,8 +179,7 @@ inline double dsigdyd2pt(double y, double pt) {
 
 //calculation of momentum shift (for pA)
 inline double shiftedPTpA(double pt, double dpta, double phiA) {
-    double root = - dpta + cos(phiA) * pt + sin(phiA) * pt;
-    return sqrt(pow(-dpta + cos(phiA) * pt, 2) + pow(sin(phiA) * pt, 2));;
+    return sqrt(pow(-dpta + cos(phiA) * pt, 2) + pow(sin(phiA) * pt, 2));
 }
 
 //calculation of momentum shift (for AB)
@@ -192,17 +191,17 @@ inline double shiftedPTAB(double pt, double dptb, double dpta, double phiB, doub
 
 int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata)
 {
-    Parameters* p = reinterpret_cast<Parameters*>(userdata);
+    Parameters* P = reinterpret_cast<Parameters*>(userdata);
     
     // Rescale ua and phiA to [0,1] 
     // scaled values
-    double ua = uMin + xx[0]*(p->uaMax-uMin);
+    double ua = uMin + xx[0]*(P->uaMax-uMin);
     double phiA = xx[1]*2*M_PI;
 
-    double dpta = dptA(p->y,p->pt);
-    double shiftedPt = shiftedPTpA(p->pt, dpta, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, p->y, p->pt);
-    double dsigVal = dsigdyd2pt(p->y + exp(ua), shiftedPt);
+    double dpta = dptA(P->y,P->pt);
+    double shiftedPt = shiftedPTpA(P->pt, dpta, phiA);
+    double phatAVal = PhatA(exp(exp(ua)) - 1, P->y, P->pt);
+    double dsigVal = dsigdyd2pt(P->y + exp(ua), shiftedPt);
     
     ff[0] = exp(ua) * phatAVal * dsigVal;
        
@@ -241,25 +240,24 @@ void pACrossSection(double y, double pt, double* res, double* err) {
         return;
     }
     
-    Parameters p;
-    p.y = y;
-    p.pt = pt;
-    p.uaMax = log(dymax(p.y, p.pt));
+    Parameters P;
+    P.y = y;
+    P.pt = pt;
+    P.uaMax = log(dymax(P.y, P.pt));
         
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
     
     Cuhre(
-          NDIM2, NCOMP, scaledpAIntegrand, &p, NVEC, epsrel, epsabs, VERBOSE | LAST,
+          NDIM2, NCOMP, scaledpAIntegrand, &P, NVEC, epsrel, epsabs, VERBOSE | LAST,
           MINEVAL, maxeval, KEY, nullptr, nullptr, &nregions, &neval, &fail,
           &integral_result, &error, &prob
           );
     
     if (fail==1) cout << "Error during integration." << endl;
-        
-    *res = (p.uaMax-uMin)*integral_result;
-    *err = (p.uaMax-uMin)*error;   
+    *res = (P.uaMax-uMin)*integral_result;
+    *err = (P.uaMax-uMin)*error;   
 }
 
 void ABCrossSection(double y, double pt, double* res, double* err) {
@@ -288,7 +286,6 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
           );
     
     if (fail==1) cout << "Error during integration." << endl;
-        
     *res = (p.ubMax-uMin)*(p.uaMax-uMin)*integral_result;
     *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;   
 }
@@ -303,8 +300,18 @@ int main()
     
     readParametersFromFile("input/params.txt",1);
     processParameters();
+
+ 
+    print_line(); // cosmetic
+    cout << "==============TESTING==============" << endl;
+    double test_result, test_error;
+    pACrossSection(-5, 0.1, &test_result, &test_error);
+    cout << "Test_result = " << test_result << endl;
+    
+    // return 0;
     
     print_line(); // cosmetic
+        
     
     create_output_directory();
     
@@ -319,34 +326,40 @@ int main()
     ofstream output_file_3(filename_3);
     ofstream output_file_4(filename_4);
     ofstream output_file_5(filename_5);
-    double result, error, result2, result3, error3;
+    double resultAB,resultpA,resultRAB,resultRpA;
+    double errorAB, errorpA, errorRAB,errorRpA;
+    
     for (int i=0; i<Ny; i++) {
         double y = y_min + i * dy;
         for (int j=0; j<Npt; j++) {
             double pt = ptmin + j * dpt;
             // compute AB cross section
-            ABCrossSection(y, pt, &result, &error);
-            cout << y << "\t" << pt << "\t" << result << "\t" << error << endl;
-            output_file_1 << y << "\t" << pt << "\t" << result << "\t" << error << endl;
+            ABCrossSection(y, pt, &resultAB, &errorAB);
+            cout << "==========AA=========="<<endl;
+            cout << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
+            output_file_1 << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
            
             // output pp cross section
-            result2 = dsigdyd2pt(y,pt);
-            output_file_2 << y << "\t" << pt << "\t" << result2 << endl;
+            double resultPP = dsigdyd2pt(y,pt);
+            cout << "==========pp=========="<<endl;
+            cout << y << "\t" << pt << "\t" << resultPP << endl;
+            output_file_2 << y << "\t" << pt << "\t" << resultPP << endl;
             
             // compute pA cross section
-            pACrossSection(y, pt, &result3, &error);
-            cout << y << "\t" << pt << "\t" << result3 << "\t" << error << endl;
-            output_file_3 << y << "\t" << pt << "\t" << result3 << "\t" << error << endl;
+            pACrossSection(y, pt, &resultpA, &errorpA);
+            cout << "==========pA=========="<<endl;
+            cout << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
+            output_file_3 << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
             
             // output RAB cross section
-            double result4 = result/result2;
-            double error4 = error/result2;
-            output_file_4 << y << "\t" << pt << "\t" << result4 << "\t" << error4 << endl;
+            double resultRAB = resultAB/resultPP;
+            double errorRAB = errorAB/resultAB;
+            output_file_4 << y << "\t" << pt << "\t" << resultRAB << "\t" << errorRAB << endl;
            
             // output RpA cross section
-            double result5 = result/result3;
-            double error5 = error/result3;
-            output_file_5 << y << "\t" << pt << "\t" << result5 << "\t" << error5 << endl;
+            double resultRpA = resultpA/resultPP;
+            double errorRpA = errorpA/resultpA;
+            output_file_5 << y << "\t" << pt << "\t" << resultRpA << "\t" << errorRpA << endl;
         }
     }
     output_file_1.close();
