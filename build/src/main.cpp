@@ -1,3 +1,14 @@
+/*
+ 
+ main.cpp
+ 
+ Copyright (c) Michael Strickland and Sabin Thapa
+ 
+ GNU General Public License (GPLv3)
+ See detailed text in license directory
+ 
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,9 +21,11 @@
 #include <gsl/gsl_sf_dilog.h>
 #include <iostream>
 #include <fstream>
+
 #include "main.h"
 #include "cuba.h"
 #include "paramreader.h"
+#include "outputroutines.h"
 
 using namespace std;
 
@@ -25,7 +38,7 @@ using namespace std;
 //
 // Global params; these default values are overridden by the params file
 //
-int nc = 3; 
+int nc = 3;
 double alphas = 0.5; // QCD coupling constant
 double lambdaQCD = 0.25;
 double qhat0 = 0.075; // GeV^2/fm
@@ -59,28 +72,6 @@ double ptmin = 0.1;
 double ptmax = 40.1;
 double dy = (y_max - y_min) / (Ny-1);
 double dpt = (ptmax - ptmin) / (Npt-1);
-
-void print_line() {
-    for (int i=0;i<100;i++) cout << "-"; cout << endl;
-    return;
-}
-
-void create_output_directory() {
-    // Create the "output" directory if it doesn't exist
-    const char* output_directory = "output";
-    struct stat info;
-    if (stat(output_directory, &info) != 0) {
-        int status = mkdir(output_directory, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        if (status == 0) {
-            cout << "Directory '" << output_directory << "' created successfully." << endl;
-        } else {
-            cerr << "Failed to create the directory '" << output_directory << "'" << endl;
-            exit(-1);
-        }
-    } else {
-        cout << "Directory '" << output_directory << "' already exists." << endl;
-    }
-}
 
 inline double Mperp2(double pt) { return pt * pt + massQQ * massQQ; }
 inline double Mperp(double pt) { return sqrt(Mperp2(pt));}
@@ -193,18 +184,18 @@ int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
 {
     Parameters* P = reinterpret_cast<Parameters*>(userdata);
     
-    // Rescale ua and phiA to [0,1] 
+    // Rescale ua and phiA to [0,1]
     // scaled values
     double ua = uMin + xx[0]*(P->uaMax-uMin);
     double phiA = xx[1]*2*M_PI;
-
+    
     double dpta = dptA(P->y,P->pt);
     double shiftedPt = shiftedPTpA(P->pt, dpta, phiA);
     double phatAVal = PhatA(exp(exp(ua)) - 1, P->y, P->pt);
     double dsigVal = dsigdyd2pt(P->y + exp(ua), shiftedPt);
     
     ff[0] = exp(ua) * phatAVal * dsigVal;
-       
+    
     return 0;
 }
 
@@ -226,15 +217,13 @@ int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
     double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt);
     double dsigVal = dsigdyd2pt(p->y + exp(ub) - exp(ua), shiftedPt);
     ff[0] = exp(ub) * exp(ua) * phatBVal * phatAVal * dsigVal;
-       
+    
     return 0;
 }
-
 
 void pACrossSection(double y, double pt, double* res, double* err) {
     
     if (fabs(y) > ymax(pt)) {
-        //cout << "==> INFO:  |y| greater than ymax(pt)!" << endl;
         *res = 1e-30;
         *err = 1e-30;
         return;
@@ -244,7 +233,7 @@ void pACrossSection(double y, double pt, double* res, double* err) {
     P.y = y;
     P.pt = pt;
     P.uaMax = log(dymax(P.y, P.pt));
-        
+    
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
@@ -257,13 +246,12 @@ void pACrossSection(double y, double pt, double* res, double* err) {
     
     if (fail==1) cout << "Error during integration." << endl;
     *res = (P.uaMax-uMin)*integral_result;
-    *err = (P.uaMax-uMin)*error;   
+    *err = (P.uaMax-uMin)*error;
 }
 
 void ABCrossSection(double y, double pt, double* res, double* err) {
     
     if (fabs(y) > ymax(pt)) {
-        //cout << "==> INFO:  |y| greater than ymax(pt)!" << endl;
         *res = 1e-30;
         *err = 1e-30;
         return;
@@ -274,7 +262,7 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     p.pt = pt;
     p.uaMax = log(dymax(-p.y, p.pt));
     p.ubMax = log(dymax(p.y, p.pt));
-        
+    
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
@@ -287,7 +275,7 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     
     if (fail==1) cout << "Error during integration." << endl;
     *res = (p.ubMax-uMin)*(p.uaMax-uMin)*integral_result;
-    *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;   
+    *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;
 }
 
 int main()
@@ -300,18 +288,8 @@ int main()
     
     readParametersFromFile("input/params.txt",1);
     processParameters();
-
- 
-    print_line(); // cosmetic
-    cout << "==============TESTING==============" << endl;
-    double test_result, test_error;
-    pACrossSection(-5, 0.1, &test_result, &test_error);
-    cout << "Test_result = " << test_result << endl;
-    
-    // return 0;
     
     print_line(); // cosmetic
-        
     
     create_output_directory();
     
@@ -335,30 +313,26 @@ int main()
             double pt = ptmin + j * dpt;
             // compute AB cross section
             ABCrossSection(y, pt, &resultAB, &errorAB);
-            cout << "==========AA=========="<<endl;
-            cout << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
             output_file_1 << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
-           
+            
             // output pp cross section
             double resultPP = dsigdyd2pt(y,pt);
-            cout << "==========pp=========="<<endl;
-            cout << y << "\t" << pt << "\t" << resultPP << endl;
             output_file_2 << y << "\t" << pt << "\t" << resultPP << endl;
             
             // compute pA cross section
             pACrossSection(y, pt, &resultpA, &errorpA);
-            cout << "==========pA=========="<<endl;
-            cout << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
             output_file_3 << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
             
-            // output RAB cross section
+            // output RAB
             double resultRAB = resultAB/resultPP;
             double errorRAB = errorAB/resultAB;
+            printResult("RAB",y,pt,resultRAB,errorRAB);
             output_file_4 << y << "\t" << pt << "\t" << resultRAB << "\t" << errorRAB << endl;
-           
-            // output RpA cross section
+            
+            // output RpA
             double resultRpA = resultpA/resultPP;
             double errorRpA = errorpA/resultpA;
+            printResult("RpA",y,pt,resultRpA,errorRpA);
             output_file_5 << y << "\t" << pt << "\t" << resultRpA << "\t" << errorRpA << endl;
         }
     }

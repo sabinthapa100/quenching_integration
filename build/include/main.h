@@ -1,3 +1,14 @@
+/*
+ 
+ main.h
+ 
+ Copyright (c) Michael Strickland and Sabin Thapa
+ 
+ GNU General Public License (GPLv3)
+ See detailed text in license directory
+ 
+ */
+
 #define NDIM2 2 //2-D integral
 #define NDIM4 4 //4-D integral
 #define NCOMP 1 

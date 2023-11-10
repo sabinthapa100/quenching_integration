@@ -1,3 +1,14 @@
+/*
+ 
+ paramreader.cpp
+ 
+ Copyright (c) Michael Strickland and Sabin Thapa
+ 
+ GNU General Public License (GPLv3)
+ See detailed text in license directory
+ 
+ */
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -38,7 +49,7 @@ void setParameter(const char *key, const char *value) {
     if (strcmp(key,"y_max")==0) y_max=atof(value);
     if (strcmp(key,"ptmin")==0) ptmin=atof(value);
     if (strcmp(key,"ptmax")==0) ptmax=atof(value);
-
+    
     return;
 }
 
@@ -93,7 +104,7 @@ void processParameters() {
     dy = (y_max - y_min) / (Ny-1);
     dpt = (ptmax - ptmin) / (Npt-1);
     
-    if (massQQ == 9.46) { 
+    if (massQQ == 9.46) {
         p0 = 6.6;
         m = 2.8;
         n = 13.8;

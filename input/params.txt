@@ -57,8 +57,8 @@ rootsnn       5023
 //n             13.8    
 
 // Parameters for integration (pt, y points)
-Ny            21   
- 
+Ny            21
+
 Npt           81
 
 y_min	     -5.0
@@ -68,6 +68,3 @@ y_max	     5.0
 ptmin	     0.1
 
 ptmax        40.1
-
-        
-

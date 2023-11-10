@@ -1,3 +1,14 @@
+/*
+ 
+ paramreader.h
+ 
+ Copyright (c) Michael Strickland and Sabin Thapa
+ 
+ GNU General Public License (GPLv3)
+ See detailed text in license directory
+ 
+ */
+
 #ifndef __paramreader_h__
 #define __paramreader_h__
 
