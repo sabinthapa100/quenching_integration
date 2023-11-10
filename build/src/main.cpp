@@ -99,7 +99,7 @@ inline double dptB(double y, double pt) { return sqrt(lB2(y, pt) - lBp2(y, pt));
 inline double LambdaAp2(double y, double pt) { return max(lambdaQCD * lambdaQCD, lAp2(y, pt));}
 inline double LambdaBp2(double y, double pt) { return max(lambdaQCD * lambdaQCD, lBp2(y, pt));}
 
-double dymax(double y, double pt) {
+inline double dymax(double y, double pt) {
     double log2 = log(2.0);
     double ymax_val = ymax(pt);
     double result = min(log2, ymax_val - y);
