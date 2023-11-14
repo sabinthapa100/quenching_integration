@@ -37,6 +37,6 @@ $(DIR_OBJ)%.o: $(DIR_SRC)%.cu
 clean:
 	@echo "Object files and executable deleted"
 	if [ -d "$(DIR_OBJ)" ]; then rm -rf $(EXE) $(DIR_OBJ)/*; rmdir $(DIR_OBJ); fi
-
+	# if [ -d "$(DIR_MAIN)/output" ]; then rm -rf $(DIR_MAIN)/output; fi
 
 .SILENT:

@@ -38,6 +38,8 @@ using namespace std;
 //
 // Global params; these default values are overridden by the params file
 //
+//Default Collision Type is pA, For AB, collisionType = 1 (overridden by params)
+int collisionType = 0; 
 int nc = 3;
 double alphas = 0.5; // QCD coupling constant
 double lambdaQCD = 0.25;
@@ -294,61 +296,98 @@ int main()
     create_output_directory();
     
     print_line(); // cosmetic
-    string filename_1 = "output/AB-cross-section.tsv";
-    string filename_2 = "output/pp-cross-section.tsv";
-    string filename_3 = "output/pA-cross-section.tsv";
-    string filename_4 = "output/RAB.tsv";
-    string filename_5 = "output/RpA.tsv";
+    string filename_1 = "output/pp-cross-section.tsv";
     ofstream output_file_1(filename_1);
-    ofstream output_file_2(filename_2);
-    ofstream output_file_3(filename_3);
-    ofstream output_file_4(filename_4);
-    ofstream output_file_5(filename_5);
-    double resultAB,resultpA,resultRAB,resultRpA;
-    double errorAB, errorpA, errorRAB,errorRpA;
     
-    for (int i=0; i<Ny; i++) {
-        double y = y_min + i * dy;
-        for (int j=0; j<Npt; j++) {
-            double pt = ptmin + j * dpt;
-            // compute AB cross section
-            ABCrossSection(y, pt, &resultAB, &errorAB);
-            output_file_1 << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
-            
-            // output pp cross section
-            double resultPP = dsigdyd2pt(y,pt);
-            output_file_2 << y << "\t" << pt << "\t" << resultPP << endl;
-            
-            // compute pA cross section
-            pACrossSection(y, pt, &resultpA, &errorpA);
-            output_file_3 << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
-            
-            // output RAB
-            double resultRAB = resultAB/resultPP;
-            double errorRAB = errorAB/resultAB;
-            printResult("RAB",y,pt,resultRAB,errorRAB);
-            output_file_4 << y << "\t" << pt << "\t" << resultRAB << "\t" << errorRAB << endl;
-            
-            // output RpA
-            double resultRpA = resultpA/resultPP;
-            double errorRpA = errorpA/resultpA;
-            printResult("RpA",y,pt,resultRpA,errorRpA);
-            output_file_5 << y << "\t" << pt << "\t" << resultRpA << "\t" << errorRpA << endl;
+
+    double resultpA, resultRpA, resultAB, resultRAB;
+    double errorpA, errorAB,  errorRAB;
+    
+    switch (collisionType){
+    case 0:
+        {
+            string filename_2 = "output/pA-cross-section.tsv";
+            string filename_3 = "output/RpA.tsv";
+            ofstream output_file_2(filename_2);
+            ofstream output_file_3(filename_3);
+
+            double resultpA, resultRpA;
+            double errorpA, errorRpA;
+
+            for (int i = 0; i < Ny; i++) {
+                double y = y_min + i * dy;
+                for (int j = 0; j < Npt; j++) {
+                    double pt = ptmin + j * dpt;
+
+                    // output pp cross section
+                    double resultPP = dsigdyd2pt(y, pt);
+                    output_file_1 << y << "\t" << pt << "\t" << resultPP << endl;
+
+                    // compute pA cross section
+                    pACrossSection(y, pt, &resultpA, &errorpA);
+                    output_file_2 << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
+
+                    // output RpA
+                    resultRpA = resultpA / resultPP;
+                    errorRpA = errorpA / resultpA;
+                    printResult("RpA", y, pt, resultRpA, errorRpA);
+                    output_file_3 << y << "\t" << pt << "\t" << resultRpA << "\t" << errorRpA << endl;
+                }
+            }
+
+            output_file_2.close();
+            output_file_3.close();
+            break;
         }
+        
+        case 1:
+        {
+            string filename_4 = "output/AB-cross-section.tsv";
+            string filename_5 = "output/RAB.tsv";
+            ofstream output_file_4(filename_4);
+            ofstream output_file_5(filename_5);
+
+            double resultAB, resultRAB;
+            double errorAB, errorRAB;
+
+            for (int i = 0; i < Ny; i++) {
+                double y = y_min + i * dy;
+                for (int j = 0; j < Npt; j++) {
+                    double pt = ptmin + j * dpt;
+
+                    // output pp cross section
+                    double resultPP = dsigdyd2pt(y, pt);
+                    output_file_1 << y << "\t" << pt << "\t" << resultPP << endl;
+
+                    // compute AB cross section
+                    ABCrossSection(y, pt, &resultAB, &errorAB);
+                    output_file_4 << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
+
+                    // output RAB
+                    resultRAB = resultAB / resultPP;
+                    errorRAB = errorAB / resultAB;
+                    printResult("RAB", y, pt, resultRAB, errorRAB);
+                    output_file_5 << y << "\t" << pt << "\t" << resultRAB << "\t" << errorRAB << endl;
+                }
+            }
+
+            output_file_4.close();
+            output_file_5.close();
+            break;
+        }
+        default:
+            cerr << "Invalid collision type. Exiting." << endl;
+            return 1;
     }
+
     output_file_1.close();
-    output_file_2.close();
-    output_file_3.close();
-    output_file_4.close();
-    output_file_5.close();
-    
-    
+
     // print done!
     print_line();
-    
+
     auto endtime = chrono::system_clock::to_time_t(chrono::system_clock::now());
     cout << "Done: " << ctime(&endtime);
     print_line(); // cosmetic
-    
+
     return 0;
 }

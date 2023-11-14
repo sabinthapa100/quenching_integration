@@ -30,6 +30,7 @@ void setParameter(const char *key, const char *value) {
     // double/float params
     // Declare the variables before using them
     
+    if (strcmp(key,"collisionType")==0) collisionType=atoi(value);
     if (strcmp(key,"nc")==0) nc=atof(value);
     if (strcmp(key,"alphas")==0) alphas=atof(value);
     if (strcmp(key,"massQQ")==0) massQQ=atof(value);
