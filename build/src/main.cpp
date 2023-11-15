@@ -280,7 +280,7 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     
     print_line(); // cosmetic
@@ -288,7 +288,14 @@ int main()
     cout << "Quenching calculation started: " << ctime(&starttime);
     print_line(); // cosmetic
     
+    // read parameters from file and command line
     readParametersFromFile("input/params.txt",1);
+    if (argc>1) {
+        print_line();
+        cout << "Parameters from commandline" << endl;
+        print_line();
+        readParametersFromCommandLine(argc,argv,1);
+    }
     processParameters();
     
     print_line(); // cosmetic

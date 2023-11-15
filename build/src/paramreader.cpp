@@ -98,6 +98,26 @@ void readParametersFromFile(string filename, int echo) {
     return;
 }
 
+//
+// Read parameters from commandline
+//
+void readParametersFromCommandLine(int argc, char** argv, int echo) {
+    int optind = 1;
+    while (optind < argc)
+    {
+        if (argv[optind][0]=='-') {
+            string key = argv[optind];
+            key = key.substr(1,key.length()); // remove '-'
+            string value = argv[optind+1]; // load value
+            if (echo) cout << key << " = " << value << endl;
+            setParameter(key.c_str(),value.c_str());
+            optind++;
+        }
+        optind++;
+    }
+    return;
+}
+
 void processParameters() {
     beamRap = acosh(rootsnn / (2.0 * massp));
     xA0 = 1.0 / (2.0 * massp * lA / HBARC);
