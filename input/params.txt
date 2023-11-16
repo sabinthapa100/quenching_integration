@@ -4,7 +4,8 @@
 // General Parameters:
 // ------------------------------------------------
 
-// Type of Collision: 0 for pA and 1 for AB collision
+// Type of Collision: 0 for both pA and AB collision [DEFAULT]
+// 1 for pA collision only, 2 for AB collision only
 collisionType	1
 
 // Number of colors

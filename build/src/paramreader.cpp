@@ -132,6 +132,6 @@ void processParameters() {
     } else if (massQQ == 3.0969) {
         p0 = 4.2;
         m = 3.5;
-        n = 19.0;
+        n = 19.2;
     }
 }

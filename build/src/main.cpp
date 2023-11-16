@@ -63,7 +63,7 @@ double n = 13.8;
 //double massQQ = 3.0969; //J/Psi mass
 //double p0 = 4.2; // in GeV for J/Psi State at 7 TeV
 //double m = 3.5;
-//double n = 19.0;
+//double n = 19.2;
 
 // Parameters for loops in y and pt
 int Ny = 10*2+1;
@@ -306,20 +306,67 @@ int main(int argc, char *argv[])
     string filename_1 = "output/pp-cross-section.tsv";
     ofstream output_file_1(filename_1);
     
-
     double resultpA, resultRpA, resultAB, resultRAB;
-    double errorpA, errorAB,  errorRAB;
+    double errorpA, errorAB, errorRpA, errorRAB;
     
     switch (collisionType){
-    case 0:
+    
+    case 0: //pA and AB results (DEFAULT - BOTH)
+    {
+            string filename_2 = "output/pA-cross-section.tsv";
+            string filename_3 = "output/RpA.tsv";
+            string filename_4 = "output/AB-cross-section.tsv";
+            string filename_5 = "output/RAB.tsv";
+            
+            ofstream output_file_2(filename_2);
+            ofstream output_file_3(filename_3);
+            ofstream output_file_4(filename_4);
+            ofstream output_file_5(filename_5);
+
+            for (int i = 0; i < Ny; i++) {
+                double y = y_min + i * dy;
+                for (int j = 0; j < Npt; j++) {
+                    double pt = ptmin + j * dpt;
+
+                    // output pp cross section
+                    double resultPP = dsigdyd2pt(y, pt);
+                    output_file_1 << y << "\t" << pt << "\t" << resultPP << endl;
+
+                    // compute pA cross section
+                    pACrossSection(y, pt, &resultpA, &errorpA);
+                    output_file_2 << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
+
+                    // output RpA
+                    resultRpA = resultpA / resultPP;
+                    errorRpA = errorpA / resultpA;
+                    printResult("RpA", y, pt, resultRpA, errorRpA);
+                    output_file_3 << y << "\t" << pt << "\t" << resultRpA << "\t" << errorRpA << endl;
+                    
+                    // compute AB cross section
+                    ABCrossSection(y, pt, &resultAB, &errorAB);
+                    output_file_4 << y << "\t" << pt << "\t" << resultAB << "\t" << errorAB << endl;
+
+                    // output RAB
+                    resultRAB = resultAB / resultPP;
+                    errorRAB = errorAB / resultAB;
+                    printResult("RAB", y, pt, resultRAB, errorRAB);
+                    output_file_5 << y << "\t" << pt << "\t" << resultRAB << "\t" << errorRAB << endl;
+                }
+            }
+
+            output_file_2.close();
+            output_file_3.close();
+            output_file_4.close();
+            output_file_5.close();
+            break;
+    	}
+    
+    case 1: //pA Result
         {
             string filename_2 = "output/pA-cross-section.tsv";
             string filename_3 = "output/RpA.tsv";
             ofstream output_file_2(filename_2);
             ofstream output_file_3(filename_3);
-
-            double resultpA, resultRpA;
-            double errorpA, errorRpA;
 
             for (int i = 0; i < Ny; i++) {
                 double y = y_min + i * dy;
@@ -347,15 +394,12 @@ int main(int argc, char *argv[])
             break;
         }
         
-        case 1:
+        case 2: //AB Result
         {
             string filename_4 = "output/AB-cross-section.tsv";
             string filename_5 = "output/RAB.tsv";
             ofstream output_file_4(filename_4);
             ofstream output_file_5(filename_5);
-
-            double resultAB, resultRAB;
-            double errorAB, errorRAB;
 
             for (int i = 0; i < Ny; i++) {
                 double y = y_min + i * dy;
@@ -382,8 +426,9 @@ int main(int argc, char *argv[])
             output_file_5.close();
             break;
         }
+        
         default:
-            cerr << "Invalid collision type. Exiting." << endl;
+            cerr << "Invalid collision type. Exiting..." << endl;
             return 1;
     }
 
