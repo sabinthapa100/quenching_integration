@@ -1,20 +1,19 @@
 ============================================================
  quenching_cuba_integration
- Version 1.0a 
+ Version 1.1a 
  Copyright (c) Michael Strickland and Sabin Thapa
- Nov 10 2023
+ Nov 26 2023
 ============================================================
 
 ------------------------------------------------------------
  REQUIREMENTS
 ------------------------------------------------------------
 
-This code requires Cuba library (https://feynarts.de/cuba/)
-installed in your machine. This code performs multidimen-
--sional integration of our function using Cuhre, a 
-deterministic algorithm based on cubature rules available in 
-Cuba library.
-
+This code requires the Cuba library (feynarts.de/cuba/)
+to be installed in your machine. This code performs 
+multidimensional integration using Cuhre, which is a 
+deterministic algorithm based on cubature rules available 
+in the Cuba library.
 
 ------------------------------------------------------------
  COMPILING
@@ -22,7 +21,7 @@ Cuba library.
 
 To compile, simply type 
 
-   $make 
+  make 
 
 from the main code directory.  This should generate an
 executable called "quenching".
@@ -30,12 +29,6 @@ executable called "quenching".
 ------------------------------------------------------------
  RUNNING  
 ------------------------------------------------------------
-
-To run with the code, simply type
-
-  $./quenching
-
-You can change the parameters in the input/params.txt file.
 
 There is a file "input/params.txt" that contains all
 parameters that can be adjusted at runtime.  It includes
