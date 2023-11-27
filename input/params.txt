@@ -6,13 +6,14 @@
 
 // Type of Collision: 0 for both pA and AB collision [DEFAULT]
 // 1 for pA collision only, 2 for AB collision only
-collisionType	1
+collisionType	0
 
 // Number of colors
 nc            3           
 
 // Strong coupling constant (Alpha_s)
-alphas        0.5         
+// if alphas = 0, then use 4-loop running with mu = dpt 
+alphas        0
 
 // Mass of Quarkonium (Upsilon) in GeV
 massQQ        9.46       
@@ -21,7 +22,8 @@ massQQ        9.46
 //massQQ        3.0969
 
 // QCD scale (Lambda QCD) in GeV
-lambdaQCD     0.25        
+// this is used in running coupling and phat calculation
+lambdaQCD     0.308       
 
 // Transport coefficient qhat0 in GeV^2/fm
 qhat0         0.075       

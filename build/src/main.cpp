@@ -19,13 +19,12 @@
 #include <sys/types.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_dilog.h>
-#include <iostream>
-#include <fstream>
 
 #include "main.h"
 #include "cuba.h"
 #include "paramreader.h"
 #include "outputroutines.h"
+#include "runningcoupling.h"
 
 using namespace std;
 
@@ -132,8 +131,9 @@ inline double calculatePolyLog4(double z, double y, double pt) {
     return gsl_sf_dilog(coeff);
 }
 
+
 //calculating quenching weights
-double PhatA(double z, double y, double pt) {
+double PhatA(double z, double y, double pt, double alphas) {
     double polylog1_result = calculatePolyLog1(z, y, pt);
     double polylog2_result = calculatePolyLog2(z, y, pt);
     double exponent = alphas * nc * (polylog1_result - polylog2_result) / (2 * M_PI);
@@ -143,7 +143,7 @@ double PhatA(double z, double y, double pt) {
     else {return result;}
 }
 
-double PhatB(double z, double y, double pt) {
+double PhatB(double z, double y, double pt, double alphas) {
     double polylog3_result = calculatePolyLog3(z, y, pt);
     double polylog4_result = calculatePolyLog4(z, y, pt);
     double exponent = alphas * nc * (polylog3_result - polylog4_result) / (2 * M_PI);
@@ -193,7 +193,7 @@ int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
     
     double dpta = dptA(P->y,P->pt);
     double shiftedPt = shiftedPTpA(P->pt, dpta, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, P->y, P->pt);
+    double phatAVal = PhatA(exp(exp(ua)) - 1, P->y, P->pt, P->alphas_a);
     double dsigVal = dsigdyd2pt(P->y + exp(ua), shiftedPt);
     
     ff[0] = exp(ua) * phatAVal * dsigVal;
@@ -215,8 +215,8 @@ int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
     double dptb = dptB(p->y,p->pt);
     double dpta = dptA(-p->y,p->pt);
     double shiftedPt = shiftedPTAB(p->pt, dptb, dpta, phiB, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, -p->y, p->pt);
-    double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt);
+    double phatAVal = PhatA(exp(exp(ua)) - 1, -p->y, p->pt, p->alphas_a);
+    double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt, p->alphas_b);
     double dsigVal = dsigdyd2pt(p->y + exp(ub) - exp(ua), shiftedPt);
     ff[0] = exp(ub) * exp(ua) * phatBVal * phatAVal * dsigVal;
     
@@ -234,8 +234,9 @@ void pACrossSection(double y, double pt, double* res, double* err) {
     Parameters P;
     P.y = y;
     P.pt = pt;
-    P.uaMax = log(dymax(P.y, P.pt));
-    
+    P.uaMax = log(dymax(y, pt));
+    P.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(y, pt)));
+
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
@@ -262,9 +263,11 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     Parameters p;
     p.y = y;
     p.pt = pt;
-    p.uaMax = log(dymax(-p.y, p.pt));
-    p.ubMax = log(dymax(p.y, p.pt));
-    
+    p.uaMax = log(dymax(-y, pt));
+    p.ubMax = log(dymax(y, pt));
+    p.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(-y, pt)));
+    p.alphas_b = (alphas != 0 ? alphas : runningCoupling(dptB(y, pt)));
+
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;

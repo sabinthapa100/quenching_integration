@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include <main.h>
+#include <outputroutines.h>
 
 using namespace std;
 
@@ -134,4 +135,11 @@ void processParameters() {
         m = 3.5;
         n = 19.2;
     }
+
+    print_line();
+    
+    if (alphas == 0) {
+	cout << "==> Using 4-loop running coupling" << endl;
+    }
+
 }

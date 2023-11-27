@@ -31,7 +31,7 @@ const int maxeval = 1e7;
 
 struct Parameters
 {
-    double y, pt, uaMax, ubMax;
+    double y, pt, uaMax, ubMax, alphas_a, alphas_b;
 };
 
 extern int collisionType, nc, Ny, Npt;
