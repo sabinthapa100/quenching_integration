@@ -15,17 +15,20 @@ nc            3
 // if alphas = 0, then use 4-loop running with mu = dpt 
 alphas        0
 
-// Mass of Quarkonium (Upsilon) in GeV
-massQQ        9.46       
+// Mass of Quarkonium (Upsilon, 9.46 for 1S and 10.023 for 2S) in GeV
+massQQ        9.46     
+//massQQ        10.023   
 
-// Mass of Quarkonium (UJ/Psi) in GeV
+// Mass of Quarkonium (J/Psi) in GeV
 //massQQ        3.0969
 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
 lambdaQCD     0.308       
 
-// Transport coefficient qhat0 in GeV^2/fm
+// Cold Nuclear Matter Transport coefficient qhat0 in GeV^2/fm; 
+//Can have values: 0.051 and 0.075 at x = 10^-2
+// Ref: https://arxiv.org/abs/2004.07188
 qhat0         0.075       
 
 // ------------------------------------------------
@@ -52,7 +55,8 @@ massp         0.938
 // ------------------------------------------------
 
 // Center-of-mass collision energy (sqrt(s_NN)) in GeV
-rootsnn       5023        
+rootsnn       5023
+//rootsnn       8160        
 
 // ------------------------------------------------
 // Parameters for Cross-Section Parametrization (p0,m,n):

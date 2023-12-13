@@ -126,14 +126,16 @@ void processParameters() {
     dy = (y_max - y_min) / (Ny-1);
     dpt = (ptmax - ptmin) / (Npt-1);
     
-    if (massQQ == 9.46) {
+    if (massQQ == 9.46 || massQQ == 10.023) {
         p0 = 6.6;
         m = 2.8;
         n = 13.8;
+        cout << "<<<<< Upsilon (" << (massQQ == 9.46 ? "1S" : "2S") << ") State >>>>>>>" << endl;
     } else if (massQQ == 3.0969) {
         p0 = 4.2;
         m = 3.5;
         n = 19.2;
+        cout << "<<<<< J/Psi State >>>>>>> " << endl;
     }
 
     print_line();
