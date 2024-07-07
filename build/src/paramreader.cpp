@@ -19,10 +19,15 @@
 #include <chrono>
 #include <string.h>
 
-#include <main.h>
-#include <outputroutines.h>
+#include "paramreader.h"
+#include "outputroutines.h"
+
+#include "main.h"
 
 using namespace std;
+
+
+double massQQ, p0, m, n; //m,n are pp params
 
 // this workhorse examines a key to see if it corresponds to a var we are setting
 // and then attempts to set the var corresponding to key by converting value to the
@@ -32,7 +37,9 @@ void setParameter(const char *key, const char *value) {
     // Declare the variables before using them
     
     if (strcmp(key,"collisionType")==0) collisionType=atoi(value);
-    if (strcmp(key,"nc")==0) nc=atof(value);
+    if (strcmp(key, "particleType") == 0) particleType = atoi(value);
+    if (strcmp(key, "upsilonState") == 0) upsilonState = atoi(value);
+    // if (strcmp(key,"nc")==0) nc=atof(value);
     if (strcmp(key,"alphas")==0) alphas=atof(value);
     if (strcmp(key,"massQQ")==0) massQQ=atof(value);
     if (strcmp(key,"lambdaQCD ")==0) lambdaQCD=atof(value);
@@ -119,29 +126,61 @@ void readParametersFromCommandLine(int argc, char** argv, int echo) {
     return;
 }
 
+
 void processParameters() {
     beamRap = acosh(rootsnn / (2.0 * massp));
     xA0 = 1.0 / (2.0 * massp * lA / HBARC);
     xB0 = 1.0 / (2.0 * massp * lB / HBARC);
-    dy = (y_max - y_min) / (Ny-1);
-    dpt = (ptmax - ptmin) / (Npt-1);
+    dy = (y_max - y_min) / (Ny - 1);
+    dpt = (ptmax - ptmin) / (Npt - 1);
+
     
-    if (massQQ == 9.46 || massQQ == 10.023) {
+    if (particleType == 0) { // Upsilon
+        switch (upsilonState) {
+            case 0:
+                massQQ = 9.95; // Average mass [DEFAULT]
+                break;
+            case 1:
+                massQQ = 9.46; //1S state
+                break;
+            case 2:
+                massQQ = 10.02326; //2S state
+                break;
+            case 3:
+                massQQ = 10.3552; //3S state
+                break;
+            default:
+                // Handle unexpected state
+                cerr << "Invalid Upsilon state specified." << endl;
+                break;
+        }
+        //DEFAULT-- Upsilon-- parameters useful in the pp cross-section parametrization
         p0 = 6.6;
         m = 2.8;
         n = 13.8;
-        cout << "<<<<< Upsilon (" << (massQQ == 9.46 ? "1S" : "2S") << ") State >>>>>>>" << endl;
-    } else if (massQQ == 3.0969) {
+        cout << "<<<<< Upsilon (" << (upsilonState == 0 ? "1S" : (upsilonState == 1 ? "2S" : (upsilonState == 2 ? "3S" : "Average"))) << ") State >>>>>>>" << endl;
+        
+    } 
+    
+    else if (particleType == 1) { // J/Psi
+        double massQQ = 3.0969;
+        // J/Psi -- parameters useful in the pp cross-section parametrization
+	//double massQQ = 3.0969; //J/Psi mass
         p0 = 4.2;
         m = 3.5;
         n = 19.2;
         cout << "<<<<< J/Psi State >>>>>>> " << endl;
+    } 
+    
+    else {
+        // Handle unexpected particle type
+        cerr << "Invalid particle type specified." << endl;
     }
 
     print_line();
-    
-    if (alphas == 0) {
-	cout << "==> Using 4-loop running coupling" << endl;
-    }
 
+    if (alphas == 0) {
+        cout << "==> Using 4-loop running coupling" << endl;
+    }
 }
+

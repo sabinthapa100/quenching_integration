@@ -30,7 +30,6 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "main.h"
 #include "outputroutines.h"
 
 using namespace std;

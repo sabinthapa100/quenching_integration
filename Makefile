@@ -11,7 +11,7 @@ OPTIONS = -std=c++17
 LINK_OPTIONS = 
 CFLAGS = $(DEBUG) $(OPTIMIZATION) $(FLOWTRACE) $(OPTIONS)
 COMPILER = g++
-LIBS = -lgsl -lgslcblas -lm -lcuba
+LIBS = -fopenmp -lgsl -lgslcblas -lm -lcuba
 INCLUDES = -I $(DIR_H) 
 
 CPP := $(shell find $(DIR_SRC) -name '*.cpp' -not -name '.*')

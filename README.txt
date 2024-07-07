@@ -1,5 +1,5 @@
 ============================================================
- quenching_cuba_integration
+ quenching_integration
  Version 1.1a 
  Copyright (c) Michael Strickland and Sabin Thapa
  Nov 26 2023

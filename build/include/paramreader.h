@@ -16,4 +16,5 @@ void readParametersFromFile(std::string filename, int echo);
 void readParametersFromCommandLine(int argc, char** argv, int echo);
 void processParameters();
 
+
 #endif /* __paramreader_h__ */

@@ -21,21 +21,11 @@
 
 using namespace std;
 
-// lower limit for u integrations
-const double uMin = -30.0;
-
-// Define the desired absolute and relative error limits (global)
-const double epsabs = 1e-12;
-const double epsrel = 1e-12;
-const int maxeval = 1e7;
-
-struct Parameters
-{
-    double y, pt, uaMax, ubMax, alphas_a, alphas_b;
-};
 
 extern int collisionType, nc, Ny, Npt;
+extern int particleType, upsilonState;
 extern double y_min, y_max, ptmin, ptmax, dy, dpt;
 extern double alphas,massQQ,lambdaQCD,qhat0,lp,lA,lB;
 extern double massp,rootsnn,p0,m,n,beamRap,xA0,xB0;
+
 
