@@ -49,7 +49,7 @@ double rootsnn = 5023; // collision energy, sqrt(s_NN)
 //Default value of lambdaQCD 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
-lambdaQCD = 0.308;
+double lambdaQCD = 0.308;
 // double lambdaQCD = 0.25; 
 
 

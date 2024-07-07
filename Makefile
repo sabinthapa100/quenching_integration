@@ -37,6 +37,14 @@ $(DIR_OBJ)%.o: $(DIR_SRC)%.cu
 clean:
 	@echo "Object files and executable deleted"
 	if [ -d "$(DIR_OBJ)" ]; then rm -rf $(EXE) $(DIR_OBJ)/*; rmdir $(DIR_OBJ); fi
-	# if [ -d "$(DIR_MAIN)/output" ]; then rm -rf $(DIR_MAIN)/output; fi
+	if [ -d "$(DIR_MAIN)/output" ]; then \
+		if [ -z "$(shell find $(DIR_MAIN)/output -mindepth 1)" ]; then \
+			rm -rf $(DIR_MAIN)/output; \
+		else \
+			echo "$(DIR_MAIN)/output is not empty. Do you want to delete it? (y/n)"; \
+			read ans; \
+			if [ "$$ans" = "y" ]; then rm -rf $(DIR_MAIN)/output; fi; \
+		fi; \
+	fi
 
 .SILENT:
