@@ -139,19 +139,19 @@ void processParameters() {
         switch (upsilonState) {
             case 0:
                 massQQ = 9.95; // Average mass [DEFAULT]
-                cout << "<<<<< Upsilon (Average Mass) >>>>>>>" << endl;
+                cout << "<<<<< Upsilon (Average Mass): " << massQQ << " GeV >>>>>>>" << endl;
                 break;
             case 1:
                 massQQ = 9.46; //1S state
-                cout << "<<<<< Upsilon (1S) >>>>>>>" << endl;
+                cout << "f'<<<<< Upsilon (1S): " << massQQ << " GeV >>>>>>>" << endl;
                 break;
             case 2:
                 massQQ = 10.02326; //2S state
-                cout << "<<<<< Upsilon (2S) >>>>>>>" << endl;
+                cout << "<<<<< Upsilon (2S): " << massQQ << " GeV >>>>>>>" << endl;
                 break;
             case 3:
                 massQQ = 10.3552; //3S state
-                cout << "<<<<< Upsilon (3S) >>>>>>>" << endl;
+                cout << "<<<<< Upsilon (3S): " << massQQ << " GeV >>>>>>>" << endl;
                 break;
             default:
                 // Handle unexpected state
@@ -172,7 +172,7 @@ void processParameters() {
         p0 = 4.2;
         m = 3.5;
         n = 19.2;
-        cout << "<<<<< J/Psi State >>>>>>> " << endl;
+        cout << "<<<<< J/Psi State with Mass = " << massQQ << " GeV >>>>>>>" << endl;
     } 
     
     else {

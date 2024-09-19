@@ -26,24 +26,23 @@ void processCollision(int collisionType) {
     double resultpA, resultRpA, resultAB, resultRAB;
     double errorpA, errorAB, errorRpA, errorRAB;
 
+    if (collisionType == 0) {cout << "DEFAULT: pA and AB Collision!" << endl;}
+    if (collisionType == 1) {cout << "DEFAULT: pA Collision Only!" << endl;}
+    if (collisionType == 2) {cout << "DEFAULT: AB Collision Only!" << endl;}
+    
+    
     ofstream output_file_1, output_file_2, output_file_3, output_file_4, output_file_5;
 
+    
+    output_file_1.open("output/pp-cross-section.tsv");
+
     if (collisionType == 0 || collisionType == 1) {
-        output_file_1.open("output/pp-cross-section.tsv");
         output_file_2.open("output/pA-cross-section.tsv");
         output_file_3.open("output/RpA.tsv");
     }
     if (collisionType == 0 || collisionType == 2) {
-        output_file_1.open("output/pp-cross-section.tsv");
         output_file_4.open("output/AB-cross-section.tsv");
         output_file_5.open("output/RAB.tsv");
-    }
-
-    if (!output_file_1.is_open() || 
-        (collisionType == 0 || collisionType == 1) && (!output_file_2.is_open() || !output_file_3.is_open()) ||
-        (collisionType == 0 || collisionType == 2) && (!output_file_4.is_open() || !output_file_5.is_open())) {
-        cerr << "Error opening one or more output files." << endl;
-        return;
     }
 
     for (int i = 0; i < Ny; i++) {
@@ -54,7 +53,7 @@ void processCollision(int collisionType) {
             // output pp cross section
             double resultPP = dsigdyd2pt(y, pt);
             output_file_1 << y << "\t" << pt << "\t" << resultPP << endl;
-
+            	
             if (collisionType == 0 || collisionType == 1) {
                 // compute pA cross section
                 pACrossSection(y, pt, &resultpA, &errorpA);
@@ -80,15 +79,17 @@ void processCollision(int collisionType) {
             }
         }
     }
-
-    output_file_1.close();
+		
     if (collisionType == 0 || collisionType == 1) {
+    	output_file_1.close();
         output_file_2.close();
         output_file_3.close();
     }
     if (collisionType == 0 || collisionType == 2) {
+    	output_file_1.close();
         output_file_4.close();
         output_file_5.close();
     }
+    
 }
 

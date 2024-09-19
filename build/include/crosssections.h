@@ -67,6 +67,7 @@ inline double shiftedPTpA(double pt, double dpta, double phiA);
 inline double shiftedPTAB(double pt, double dptb, double dpta, double phiB, double phiA);
 int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata);
 int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata);
+void averageNeighbors(double y, double pt, double* res, double* err, int num_neighbors, void (*crossSectionFunc)(double, double, double*, double*));
 void pACrossSection(double y, double pt, double* res, double* err);
 void ABCrossSection(double y, double pt, double* res, double* err);
 

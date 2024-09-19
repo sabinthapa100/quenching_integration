@@ -17,6 +17,7 @@
 #include <sys/types.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_dilog.h>
+#include <numeric> 
 
 #include "cuba.h"
 #include "paramreader.h"
@@ -26,7 +27,6 @@
 #include <omp.h>
 
 #include "main.h"
-
 
 using namespace std;
 
@@ -131,7 +131,6 @@ inline double calculatePolyLog4(double z, double y, double pt) {
     return gsl_sf_dilog(coeff);
 }
 
-
 //calculating quenching weights
 double PhatA(double z, double y, double pt, double alphas) {
     double polylog1_result = calculatePolyLog1(z, y, pt);
@@ -139,6 +138,7 @@ double PhatA(double z, double y, double pt, double alphas) {
     double exponent = alphas * nc * (polylog1_result - polylog2_result) / (2 * M_PI);
     double logterms = 2 * log(1 + lA2(y, pt) / (z * z * Mperp2(pt))) / z - 2 * log(1 + LambdaAp2(y, pt) / (z * z * Mperp2(pt))) / z;
     double result = alphas * exp(exponent) * nc * logterms / (2 * M_PI);
+    
     if (lA == lp){return 1;}
     else {return result;}
 }
@@ -149,7 +149,8 @@ double PhatB(double z, double y, double pt, double alphas) {
     double exponent = alphas * nc * (polylog3_result - polylog4_result) / (2 * M_PI);
     double logterms = 2 * log(1 + lB2(y, pt) / (z * z * Mperp2(pt))) / z - 2 * log(1 + LambdaBp2(y, pt) / (z * z * Mperp2(pt))) / z;
     double result = alphas * exp(exponent) * nc * logterms / (2 * M_PI);
-    if (lB == lp){return 1;}
+    
+  if (lB == lp){return 1;}
     else {return result;}
 }
 
@@ -223,6 +224,7 @@ int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
     return 0;
 }
 
+// Function to calculate the pA cross section
 void pACrossSection(double y, double pt, double* res, double* err) {
     
     if (fabs(y) > ymax(pt)) {
@@ -240,18 +242,20 @@ void pACrossSection(double y, double pt, double* res, double* err) {
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
-    
+    //INTEGRATION ROUTINE
     Cuhre(
           NDIM2, NCOMP, scaledpAIntegrand, &P, NVEC, epsrel, epsabs, VERBOSE | LAST,
           MINEVAL, maxeval, KEY, nullptr, nullptr, &nregions, &neval, &fail,
           &integral_result, &error, &prob
           );
-    
-    if (fail==1) cout << "Error during integration." << endl;
-    *res = (P.uaMax-uMin)*integral_result;
-    *err = (P.uaMax-uMin)*error;
+
+    //ERROR HANDLING 
+   if (fail==1) cout << ">>>> Error (pA) or NaN! <<<<< " << endl;
+   *res = (P.uaMax-uMin)*integral_result;
+   *err = (P.uaMax-uMin)*error;
 }
 
+// Function to calculate the AB cross section
 void ABCrossSection(double y, double pt, double* res, double* err) {
     
     if (fabs(y) > ymax(pt)) {
@@ -271,14 +275,17 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     // Integration parameters
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
-    
+    //INTEGRATION ROUTINE
     Cuhre(
           NDIM4, NCOMP, scaledABIntegrand, &p, NVEC, epsrel, epsabs, VERBOSE | LAST,
           MINEVAL, maxeval, KEY, nullptr, nullptr, &nregions, &neval, &fail,
           &integral_result, &error, &prob
           );
-    
-    if (fail==1) cout << "Error during integration." << endl;
-    *res = (p.ubMax-uMin)*(p.uaMax-uMin)*integral_result;
-    *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;
+      
+ 
+     if (fail == 1 || isnan(*res)) { cout << ">>>> Error (AB) or NaN!" << endl;}
+
+   *res = (p.ubMax-uMin)*(p.uaMax-uMin)*integral_result;
+   *err = (p.ubMax-uMin)*(p.uaMax-uMin)*error;
+   
 }
