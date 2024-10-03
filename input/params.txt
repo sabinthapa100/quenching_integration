@@ -11,13 +11,10 @@ collisionType	1
 // Particle Type: 0 for Upsilon, 1 for J/Psi
 particleType  1
 
-// Upsilon state: 0 for Upsilon (Average mass), 1 for 1S, 2 for 2S, 3 for 3S
-upsilonState  0
 
 // Strong coupling constant (Alpha_s)
 // if alphas = 0, then use 4-loop running with mu = dpt 
 alphas        0
-
 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
@@ -52,8 +49,8 @@ massp         0.938
 // ------------------------------------------------
 
 // Center-of-mass collision energy (sqrt(s_NN)) in GeV
-rootsnn       5023
-//rootsnn       8160        
+// rootsnn       5023
+rootsnn       8160        
 
 
 // Parameters for integration (pt, y points)

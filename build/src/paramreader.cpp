@@ -38,7 +38,6 @@ void setParameter(const char *key, const char *value) {
     
     if (strcmp(key,"collisionType")==0) collisionType=atoi(value);
     if (strcmp(key, "particleType") == 0) particleType = atoi(value);
-    if (strcmp(key, "upsilonState") == 0) upsilonState = atoi(value);
     // if (strcmp(key,"nc")==0) nc=atof(value);
     if (strcmp(key,"alphas")==0) alphas=atof(value);
     if (strcmp(key,"massQQ")==0) massQQ=atof(value);
@@ -136,29 +135,31 @@ void processParameters() {
 
     
     if (particleType == 0) { // Upsilon
-        switch (upsilonState) {
-            case 0:
-                massQQ = 9.95; // Average mass [DEFAULT]
-                cout << "<<<<< Upsilon (Average Mass): " << massQQ << " GeV >>>>>>>" << endl;
-                break;
-            case 1:
-                massQQ = 9.46; //1S state
-                cout << "f'<<<<< Upsilon (1S): " << massQQ << " GeV >>>>>>>" << endl;
-                break;
-            case 2:
-                massQQ = 10.02326; //2S state
-                cout << "<<<<< Upsilon (2S): " << massQQ << " GeV >>>>>>>" << endl;
-                break;
-            case 3:
-                massQQ = 10.3552; //3S state
-                cout << "<<<<< Upsilon (3S): " << massQQ << " GeV >>>>>>>" << endl;
-                break;
-            default:
-                // Handle unexpected state
-                cerr << "Invalid Upsilon state specified." << endl;
-                break;
-        }
+       // switch (upsilonState) {
+        //    case 0:
+         //       massQQ = 9.95; // Average mass [DEFAULT]
+       //         cout << "<<<<< Upsilon (Average Mass): " << massQQ << " GeV >>>>>>>" << endl;
+         //       break;
+        //    case 1:
+        //        massQQ = 9.46; //1S state
+        //        cout << "f'<<<<< Upsilon (1S): " << massQQ << " GeV >>>>>>>" << endl;
+       //         break;
+       //     case 2:
+        //        massQQ = 10.02326; //2S state
+        //        cout << "<<<<< Upsilon (2S): " << massQQ << " GeV >>>>>>>" << endl;
+        //        break;
+        //    case 3:
+        //        massQQ = 10.3552; //3S state
+        //        cout << "<<<<< Upsilon (3S): " << massQQ << " GeV >>>>>>>" << endl;
+        //        break;
+        //    default:
+         //       // Handle unexpected state
+         //       cerr << "Invalid Upsilon state specified." << endl;
+       //         break;
+        //}
         //DEFAULT-- Upsilon-- parameters useful in the pp cross-section parametrization
+        massQQ = 9.95;// Average Mass
+        cout << "f'<<<<< Upsilon : " << massQQ << " GeV >>>>>>>" << endl;
         p0 = 6.6;
         m = 2.8;
         n = 13.8;
@@ -166,9 +167,9 @@ void processParameters() {
     } 
     
     else if (particleType == 1) { // J/Psi
-        double massQQ = 3.0969;
+        double massQQ = 3.43; //average mass of J/psi, Chi(1P), Psi(2S)
         // J/Psi -- parameters useful in the pp cross-section parametrization
-	//double massQQ = 3.0969; //J/Psi mass
+	//double massQQ = 3.0969; //J/Psi mass only
         p0 = 4.2;
         m = 3.5;
         n = 19.2;
