@@ -1,0 +1,67 @@
+// Parameter File: Parameters for Particle Collisions
+
+// ------------------------------------------------
+// General Parameters:
+// ------------------------------------------------
+
+// Type of Collision: 0 for both pA and AB collision [DEFAULT]
+// 1 for pA collision only, 2 for AB collision only
+collisionType	1
+
+// Particle Type: 0 for Upsilon, 1 for J/Psi
+particleType  1
+
+
+// Strong coupling constant (Alpha_s)
+// if alphas = 0, then use 4-loop running with mu = dpt 
+alphas        0
+
+// QCD scale (Lambda QCD) in GeV
+// this is used in running coupling and phat calculation
+//lambdaQCD 	0.25;
+lambdaQCD     0.308       
+
+// Cold Nuclear Matter Transport coefficient qhat0 in GeV^2/fm; 
+//Can have values: 0.051 and 0.075 at x = 10^-2
+// Ref: https://arxiv.org/abs/2004.07188
+qhat0         0.075       
+
+// ------------------------------------------------
+// Effective Path Lengths:
+// ------------------------------------------------
+// Proton-nuclei effective path length (Lp) in fm
+lp            1.5     
+
+// Nuclei A effective path length (LA) in fm (e.g., lead nuclei)
+lA            10.385     
+
+// Nuclei B effective path length (LB) in fm (e.g., lead nuclei)
+lB            10.385
+
+// ------------------------------------------------
+// Proton Parameters:
+// ------------------------------------------------
+// Mass of proton in GeV (could be approximated as 1 GeV)
+massp         0.938       
+
+// ------------------------------------------------
+// Collision Energy:
+// ------------------------------------------------
+
+// Center-of-mass collision energy (sqrt(s_NN)) in GeV
+rootsnn       5023
+// rootsnn       8160        
+
+
+// Parameters for integration (pt, y points)
+Ny            21
+
+Npt           81
+
+y_min	     -5.0
+
+y_max	     5.0
+
+ptmin	     0.1
+
+ptmax        40.1
