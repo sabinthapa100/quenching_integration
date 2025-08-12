@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <chrono>
 #include <string.h>
-
+#include <algorithm>
 #include "paramreader.h"
 #include "outputroutines.h"
 
@@ -29,37 +29,60 @@ using namespace std;
 
 double massQQ, p0, m, n; //m,n are pp params
 
+// --- define storage for globals declared extern in header ---
+int    A        = 208;
+double rho0     = 0.17;       // fm^-3
+int    useCentrality = 0;     // 0: min-bias
+double cmin     = 0.0;        // fractions (0..1)
+double cmax     = 0.0;
+std::vector<double> centralityEdges;  // percent (0..100), optional
+
 // this workhorse examines a key to see if it corresponds to a var we are setting
 // and then attempts to set the var corresponding to key by converting value to the
 // appropriate type.  lots of hardcoding here
 void setParameter(const char *key, const char *value) {
-    // double/float params
-    // Declare the variables before using them
-    
-    if (strcmp(key,"collisionType")==0) collisionType=atoi(value);
-    if (strcmp(key, "particleType") == 0) particleType = atoi(value);
-    // if (strcmp(key,"nc")==0) nc=atof(value);
-    if (strcmp(key,"alphas")==0) alphas=atof(value);
-    if (strcmp(key,"massQQ")==0) massQQ=atof(value);
-    if (strcmp(key,"lambdaQCD ")==0) lambdaQCD=atof(value);
-    if (strcmp(key,"qhat0")==0) qhat0=atof(value);
-    if (strcmp(key,"lp")==0) lp=atof(value);
-    if (strcmp(key,"lA")==0) lA=atof(value);
-    if (strcmp(key,"lB")==0) lB=atof(value);
-    if (strcmp(key,"massp")==0) massp=atof(value);
-    if (strcmp(key,"rootsnn")==0) rootsnn=atof(value);
-    if (strcmp(key,"p0")==0) p0=atof(value);
-    if (strcmp(key,"m")==0) m=atof(value);
-    if (strcmp(key,"n")==0) n=atof(value);
-    if (strcmp(key,"Ny")==0) Ny=atof(value);
-    if (strcmp(key,"Npt")==0) Npt=atof(value);
-    if (strcmp(key,"y_min")==0) y_min=atof(value);
-    if (strcmp(key,"y_max")==0) y_max=atof(value);
-    if (strcmp(key,"ptmin")==0) ptmin=atof(value);
-    if (strcmp(key,"ptmax")==0) ptmax=atof(value);
-    
-    return;
+    if (strcmp(key,"collisionType")==0) collisionType = atoi(value);
+    if (strcmp(key,"A")==0)             A             = atoi(value);
+    if (strcmp(key,"useCentrality")==0) useCentrality = atoi(value);   // was atof
+    if (strcmp(key,"cmin")==0)          cmin          = atof(value);
+    if (strcmp(key,"cmax")==0)          cmax          = atof(value);
+    if (strcmp(key,"rho0")==0)          rho0          = atof(value);   // keep rho0 name
+
+    if (strcmp(key, "particleType")==0) particleType  = atoi(value);
+    if (strcmp(key,"alphas")==0)        alphas        = atof(value);
+    if (strcmp(key,"massQQ")==0)        massQQ        = atof(value);
+    if (strcmp(key,"lambdaQCD")==0)     lambdaQCD     = atof(value);   // removed stray space
+    if (strcmp(key,"qhat0")==0)         qhat0         = atof(value);
+    if (strcmp(key,"lp")==0)            lp            = atof(value);
+    if (strcmp(key,"massp")==0)         massp         = atof(value);
+    if (strcmp(key,"rootsnn")==0)       rootsnn       = atof(value);
+    if (strcmp(key,"p0")==0)            p0            = atof(value);
+    if (strcmp(key,"m")==0)             m             = atof(value);
+    if (strcmp(key,"n")==0)             n             = atof(value);
+    if (strcmp(key,"Ny")==0)            Ny            = atoi(value);   // ints
+    if (strcmp(key,"Npt")==0)           Npt           = atoi(value);
+    if (strcmp(key,"y_min")==0)         y_min         = atof(value);
+    if (strcmp(key,"y_max")==0)         y_max         = atof(value);
+    if (strcmp(key,"ptmin")==0)         ptmin         = atof(value);
+    if (strcmp(key,"ptmax")==0)         ptmax         = atof(value);
+
+    // NEW: centralityEdges CSV parser (0..100 percent)
+    if (strcmp(key,"centralityEdges")==0) {
+        centralityEdges.clear();
+        std::string s(value);
+        for (char &ch : s) if (ch==';') ch=',';                 // allow semicolons
+        std::stringstream ss(s);
+        std::string tok;
+        while (std::getline(ss, tok, ',')) {
+            if (!tok.empty()) centralityEdges.push_back(atof(tok.c_str()));
+        }
+        // sanitize
+        for (double &v : centralityEdges) v = std::min(100.0, std::max(0.0, v));
+        std::sort(centralityEdges.begin(), centralityEdges.end());
+        centralityEdges.erase(std::unique(centralityEdges.begin(), centralityEdges.end()), centralityEdges.end());
+    }
 }
+
 
 //
 // This routine assumes that parameters are in text file with

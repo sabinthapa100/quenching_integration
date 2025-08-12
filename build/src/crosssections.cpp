@@ -27,6 +27,7 @@
 #include <omp.h>
 
 #include "main.h"
+#include "glauber.h"
 
 using namespace std;
 
@@ -41,8 +42,8 @@ int nc = 3;
 double alphas = 0.5; // QCD coupling constant
 double qhat0 = 0.075; // GeV^2/fm
 double lp = 1.5; // in fm
-double lA = 10.11; // in fm
-double lB = 10.11; // in fm
+double lA = 10.11; // in fm for Pb
+double lB = 10.11; // in fm for Pb
 double massp = 0.938; // mass of proton in GeV, it can also be 1 GeV
 double rootsnn = 5023; // collision energy, sqrt(s_NN)
 
@@ -51,7 +52,6 @@ double rootsnn = 5023; // collision energy, sqrt(s_NN)
 // this is used in running coupling and phat calculation
 double lambdaQCD = 0.308;
 // double lambdaQCD = 0.25; 
-
 
 // Computed from params file
 double beamRap, xA0, xB0;

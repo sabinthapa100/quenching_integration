@@ -15,6 +15,7 @@
 
 #include "main.h"
 #include <fstream>
+#include <string>
 using namespace std;
 
 // 0 for Upsilon, 1 for J/Psi
@@ -34,17 +35,18 @@ void processCollision(int collisionType) {
     ofstream output_file_1, output_file_2, output_file_3, output_file_4, output_file_5;
 
     
-    output_file_1.open("output/pp-cross-section.tsv");
+    //output_file_1.open("output/pp-cross-section.tsv");
+    output_file_1.open( ("output/" + outTag + "pp-cross-section.tsv").c_str() );
 
     if (collisionType == 0 || collisionType == 1) {
-        output_file_2.open("output/pA-cross-section.tsv");
-        output_file_3.open("output/RpA.tsv");
+        output_file_2.open( ("output/" + outTag + "pA-cross-section.tsv").c_str() );
+        output_file_3.open( ("output/" + outTag + "RpA.tsv").c_str() );
     }
     if (collisionType == 0 || collisionType == 2) {
-        output_file_4.open("output/AB-cross-section.tsv");
-        output_file_5.open("output/RAB.tsv");
+        output_file_4.open( ("output/" + outTag + "AB-cross-section.tsv").c_str() );
+        output_file_5.open( ("output/" + outTag + "RAB.tsv").c_str() );
     }
-
+    
     for (int i = 0; i < Ny; i++) {
         double y = y_min + i * dy;
         for (int j = 0; j < Npt; j++) {
