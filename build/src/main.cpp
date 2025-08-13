@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     cout << "Reading Parameters and Setting Up Calculation: " << ctime(&starttime);
     print_line(); // cosmetic
 
-    // 1) Read parameters
+    // 1) Read parameters from file and command line
     readParametersFromFile("input/params.txt", 1);
     if (argc > 1) {
         print_line();
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
         // ---- MIN-BIAS ----
         double LA = compute_LA_minbias_pA(A, rho0, lp);
         cout << std::fixed << setprecision(6)
-             << "[MIN-BIAS] rootsNN=" << rootsnn << " GeV, A=" << A
+             << "[MIN-BIAS] rootsNN=" << rootsnn << " GeV, A =" << A
              << " => L_eff = " << LA << " fm\n";
 
         // Use it automatically
@@ -99,7 +99,8 @@ int main(int argc, char *argv[]) {
         print_line();
 
         processCollision(collisionType);
-    } else {
+    } 
+    else {
         // ---- CENTRALITY ----
         // priority: user table (centralityEdges) > single (cmin/cmax) > defaults
         std::vector<double> edges;

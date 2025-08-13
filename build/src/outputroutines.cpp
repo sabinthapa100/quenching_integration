@@ -39,22 +39,60 @@ void print_line() {
     return;
 }
 
+static bool ensure_dir(const char* path) {
+    struct stat info;
+    if (stat(path, &info) == 0) return S_ISDIR(info.st_mode);
+    if (mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0) return true;
+    cerr << "Failed to create directory '" << path << "': " << strerror(errno) << "\n";
+    return false;
+}
 void create_output_directory() {
     // Create the "output" directory if it doesn't exist
-    const char* output_directory = "output";
+    const char* baseDir = "output";
     struct stat info;
-    if (stat(output_directory, &info) != 0) {
-        int status = mkdir(output_directory, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        if (status == 0) {
-            cout << "Directory '" << output_directory << "' created successfully." << endl;
+    if (stat(baseDir, &info) != 0) {
+        if (mkdir(baseDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0) {
+            cout << "Directory '" << baseDir << "' created successfully." << endl;
         } else {
-            cerr << "Failed to create the directory '" << output_directory << "'" << endl;
+            cerr << "Failed to create the directory '" << baseDir << "': "
+                 << strerror(errno) << endl;
             exit(-1);
         }
+    } else if (!S_ISDIR(info.st_mode)) {
+        cerr << "'" << baseDir << "' exists but is not a directory." << endl;
+        exit(-1);
     } else {
-        cout << "Directory '" << output_directory << "' already exists." << endl;
+        // cout << "Directory '" << baseDir << "' already exists." << endl;
     }
 }
+
+void create_output_directory(const std::string& particleName) {
+    // Base output folder
+    const char* baseDir = "output";
+    struct stat info;
+
+    // Create base output folder if it doesn't exist
+    if (stat(baseDir, &info) != 0) {
+        if (mkdir(baseDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0) {
+            cout << "Directory '" << baseDir << "' created successfully." << endl;
+        } else {
+            cerr << "Failed to create directory '" << baseDir << "'" << endl;
+            exit(-1);
+        }
+    }
+
+    // Create particle-specific subfolder
+    std::string particleDir = std::string(baseDir) + "/" + particleName;
+    if (stat(particleDir.c_str(), &info) != 0) {
+        if (mkdir(particleDir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0) {
+            cout << "Directory '" << particleDir << "' created successfully." << endl;
+        } else {
+            cerr << "Failed to create directory '" << particleDir << "'" << endl;
+            exit(-1);
+        }
+    }
+}
+
 
 void printResult(string label, double y, double pt, double result, double error) {
     if (!std::isfinite(result)) result = 0.0;

@@ -53,20 +53,21 @@ void processCollision(int collisionType) {
     
     // --- NEW: prefix includes outTag + particle tag ---
     const std::string ptag   = particleTag();
-    const std::string prefix = outTag + ptag + "_";
+    create_output_directory(ptag);
+    const std::string prefix = "output/" + ptag + "/" + outTag + ptag + "_";
     
     // pp
-    output_file_1.open( ("output/" + prefix + "pp-cross-section.tsv").c_str() );
+    output_file_1.open( (prefix + "pp-cross-section.tsv").c_str() );
 
     // pA
     if (collisionType == 0 || collisionType == 1) {
-        output_file_2.open( ("output/" + prefix + "pA-cross-section.tsv").c_str() );
-        output_file_3.open( ("output/" + prefix + "RpA.tsv").c_str() );
+        output_file_2.open( (prefix + "pA-cross-section.tsv").c_str() );
+        output_file_3.open( (prefix + "RpA.tsv").c_str() );
     }
     // AB
     if (collisionType == 0 || collisionType == 2) {
-        output_file_4.open( ("output/" + prefix + "AB-cross-section.tsv").c_str() );
-        output_file_5.open( ("output/" + prefix + "RAB.tsv").c_str() );
+        output_file_4.open( (prefix + "AB-cross-section.tsv").c_str() );
+        output_file_5.open( (prefix + "RAB.tsv").c_str() );
     }
     
     for (int i = 0; i < Ny; i++) {
@@ -85,7 +86,7 @@ void processCollision(int collisionType) {
                 output_file_2 << y << "\t" << pt << "\t" << resultpA << "\t" << errorpA << endl;
 
                 // output RpA
-                resultRpA = resultRpA = safe_div(resultpA, resultPP);
+                resultRpA = safe_div(resultpA, resultPP);
                 errorRpA  = (resultpA > 1e-300) ? safe_div(errorpA, resultpA) : 0.0;
 
                 // --- NEW: include particle name in printed label ---
