@@ -57,6 +57,8 @@ void create_output_directory() {
 }
 
 void printResult(string label, double y, double pt, double result, double error) {
+    if (!std::isfinite(result)) result = 0.0;
+    if (!std::isfinite(error))  error  = 0.0;
     cout.width(3);
     cout << label;
     cout.width(5);

@@ -1,0 +1,6 @@
+output/*
+output*/*
+.DS_Store
+build/obj
+quenching
+log.txt

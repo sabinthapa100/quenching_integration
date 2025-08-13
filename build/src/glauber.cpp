@@ -174,7 +174,7 @@ double compute_LA_minbias_pA(int A, double rho0, double Lp)
 {
     // ∫ d^2b T_A^2(b) = 2π ∫_0^{bMax} b db [T_A(b,0,A)]^2
     const double bMax = 20.0;   // fm (safe for Pb/Au tails)
-    const int    Nb   = 2000;
+    const int    Nb   = 1000;
     const double db   = bMax / Nb;
 
     auto TA_b = [&](double b){ return TA(b, 0.0, A); };
@@ -207,7 +207,7 @@ double compute_LA_centrality_pA(double cmin, double cmax,
 
     // --- Step 1: compute σ_N = ∫ d^2b Binom(A,N) p(b)^N (1-p)^(A-N), N>=1
     const double bMax = 20.0;   // fm
-    const int    Nb   = 4000;
+    const int    Nb   = 1000;
     const double db   = bMax / Nb;
 
     // precompute log binomial coeffs

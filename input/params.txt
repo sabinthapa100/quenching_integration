@@ -8,15 +8,15 @@ A	208
 
 // Type of Collision: 0 for both pA and AB collision [DEFAULT]
 // 1 for pA collision only, 2 for AB collision only
-collisionType	1
+collisionType	0
 
 // Particle Type: 0 for Upsilon, 1 for J/Psi
-particleType  1
+particleType   1 
 
 
 // Strong coupling constant (Alpha_s)
 // if alphas = 0, then use 4-loop running with mu = dpt 
-alphas        1
+alphas        0
 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
@@ -41,11 +41,6 @@ centralityEdges  0,20,40,60,100
 // Proton-nuclei effective path length (Lp) in fm
 lp            1.5     
 
-// Nuclei A effective path length (LA) in fm (e.g., lead nuclei)
-lA            10.385     
-
-// Nuclei B effective path length (LB) in fm (e.g., lead nuclei)
-lB            10.385
 
 // ------------------------------------------------
 // Proton Parameters:

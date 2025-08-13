@@ -133,6 +133,7 @@ inline double calculatePolyLog4(double z, double y, double pt) {
 
 //calculating quenching weights
 double PhatA(double z, double y, double pt, double alphas) {
+    if (z < 1e-12) z = 1e-12;
     double polylog1_result = calculatePolyLog1(z, y, pt);
     double polylog2_result = calculatePolyLog2(z, y, pt);
     double exponent = alphas * nc * (polylog1_result - polylog2_result) / (2 * M_PI);
@@ -140,7 +141,8 @@ double PhatA(double z, double y, double pt, double alphas) {
     double result = alphas * exp(exponent) * nc * logterms / (2 * M_PI);
     
     if (lA == lp){return 1;}
-    else {return result;}
+    if (!std::isfinite(result) || result < 0.0) {result = 0.0;}
+    return result;
 }
 
 double PhatB(double z, double y, double pt, double alphas) {
@@ -194,10 +196,13 @@ int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
     
     double dpta = dptA(P->y,P->pt);
     double shiftedPt = shiftedPTpA(P->pt, dpta, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, P->y, P->pt, P->alphas_a);
+    double z = std::exp(std::exp(ua)) - 1.0;
+    if (z < 1e-12) z = 1e-12;                 // avoid z→0 singularity
+    double phatAVal = PhatA(z, P->y, P->pt, P->alphas_a);
     double dsigVal = dsigdyd2pt(P->y + exp(ua), shiftedPt);
-    
-    ff[0] = exp(ua) * phatAVal * dsigVal;
+    double val = std::exp(ua) * phatAVal * dsigVal;
+    if (!std::isfinite(val) || val <= 0.0) val = 0.0;
+    ff[0] = val;
     
     return 0;
 }
@@ -216,10 +221,17 @@ int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
     double dptb = dptB(p->y,p->pt);
     double dpta = dptA(-p->y,p->pt);
     double shiftedPt = shiftedPTAB(p->pt, dptb, dpta, phiB, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, -p->y, p->pt, p->alphas_a);
-    double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt, p->alphas_b);
+    double zA = std::exp(std::exp(ua)) - 1.0;
+    double zB = std::exp(std::exp(ub)) - 1.0;
+    if (zA < 1e-12) zA = 1e-12;
+    if (zB < 1e-12) zB = 1e-12;
+    double phatAVal = PhatA(zA, p->y, p->pt, p->alphas_a);
+    double phatBVal = PhatB(zB, p->y, p->pt, p->alphas_b);
     double dsigVal = dsigdyd2pt(p->y + exp(ub) - exp(ua), shiftedPt);
-    ff[0] = exp(ub) * exp(ua) * phatBVal * phatAVal * dsigVal;
+    
+    double val = std::exp(ua) * std::exp(ub) * phatAVal * phatBVal * dsigVal;
+    if (!std::isfinite(val) || val <= 0.0) val = 0.0;
+    ff[0] = val;
     
     return 0;
 }
