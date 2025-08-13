@@ -41,7 +41,6 @@ void setParameter(const char *key, const char *value) {
     if (strcmp(key, "upsilonState") == 0) upsilonState = atoi(value);
     // if (strcmp(key,"nc")==0) nc=atof(value);
     if (strcmp(key,"alphas")==0) alphas=atof(value);
-    if (strcmp(key,"massQQ")==0) massQQ=atof(value);
     if (strcmp(key,"lambdaQCD ")==0) lambdaQCD=atof(value);
     if (strcmp(key,"qhat0")==0) qhat0=atof(value);
     if (strcmp(key,"lp")==0) lp=atof(value);
@@ -166,7 +165,7 @@ void processParameters() {
     } 
     
     else if (particleType == 1) { // J/Psi
-        double massQQ = 3.0969;
+        double massQQ = 3.43; //average mass of J/psi(1S), psi(2S), X_c(1P)
         // J/Psi -- parameters useful in the pp cross-section parametrization
 	//double massQQ = 3.0969; //J/Psi mass
         p0 = 4.2;

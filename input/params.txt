@@ -6,7 +6,7 @@
 
 // Type of Collision: 0 for both pA and AB collision [DEFAULT]
 // 1 for pA collision only, 2 for AB collision only
-collisionType	1
+collisionType	0
 
 // Particle Type: 0 for Upsilon, 1 for J/Psi
 particleType  1
