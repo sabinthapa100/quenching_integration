@@ -9,7 +9,7 @@
 collisionType	0
 
 // Particle Type: 0 for Upsilon, 1 for J/Psi
-particleType  1
+particleType  0
 
 // Upsilon state: 0 for Upsilon (Average mass), 1 for 1S, 2 for 2S, 3 for 3S
 upsilonState  0
@@ -35,11 +35,11 @@ qhat0         0.075
 // Proton-nuclei effective path length (Lp) in fm
 lp            1.5     
 
-// Nuclei A effective path length (LA) in fm (e.g., lead nuclei)
-lA            10.385     
+// Nuclei A effective path length (LA) in fm (e.g., lead nuclei) (LHC: 0-20-40-60-100: 13.46, 9.55, 6.29, 3.39)https://arxiv.org/pdf/1304.0901
+lA            11.41   
 
-// Nuclei B effective path length (LB) in fm (e.g., lead nuclei)
-lB            10.385
+// Nuclei B effective path length (LB) in fm (e.g., lead nuclei) 
+lB            11.41
 
 // ------------------------------------------------
 // Proton Parameters:
