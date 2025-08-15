@@ -16,7 +16,7 @@ particleType   0
 
 // Strong coupling constant (Alpha_s)
 // if alphas = 0, then use 4-loop running with mu = dpt 
-alphas        0
+alphas        1
 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
@@ -31,7 +31,7 @@ qhat0         0.075
 // ----------------------------------------------------------
 // Different Centralities Collision: 0 (minbias-OFF) 1(YES)
 // ------------------------------------------------------
-useCentrality	1
+useCentrality	0
 // LHC ==> 0-20-40-60-100%; RHIC ==>0-20-40-60-88%
 centralityEdges  0,20,40,60,100
 // centralityEdges  0,10,20,30,40,50,60,70,80,90,100

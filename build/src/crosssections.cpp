@@ -161,7 +161,7 @@ double PhatA(double z, double y, double pt, double alphas) {
 
 double PhatB(double z, double y, double pt, double alphas) {
     if (!(z > zMinFloor)) z = zMinFloor;
-    if (std::fabs(lB - lp) < 1e-12) return 1.0;
+    if (lB <= lp + 1e-12) return 1.0;
 
     const double M2 = Mperp2(pt);
     const double invz2M2 = 1.0 / (z*z*M2);

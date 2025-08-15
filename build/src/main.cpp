@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     double sigmaNN_mb = select_sigmaNN_mb(rootsnn);
     set_sigmaNN_mb(sigmaNN_mb);
 
-    cout << "Computing Effective Path Lengths (sigmaNN = " << sigmaNN_mb << " mb) ...\n";
+    cout << "Computing Effective Path Lengths at "<< rootsnn << " GeV (sigmaNN = " << sigmaNN_mb << " mb) ...\n";
 
     // 3) Branch: min-bias vs centrality
     if (useCentrality == 0) {
@@ -85,13 +85,24 @@ int main(int argc, char *argv[]) {
              << "[MIN-BIAS] rootsNN=" << rootsnn << " GeV, A =" << A
              << " => L_eff = " << LA << " fm\n";
 
-        // Use it automatically
-        if (collisionType == 2) {               // AA
-            lA = LA; lB = LA;
-        } else {                               
-            lA = LA; lB = lp; // lB is ignored for pA
-        }
+        // set Lengths
+        lA = LA;
+        lB = LA;
+        
+        cout << "[DEBUG 1]: lA=" << lA << ", lB=" << lB 
+            << ", lp=" << lp 
+            << ", rootsnn=" << rootsnn 
+            << ", xA0=" << xA0 << ", xB0=" << xB0 
+            << ", dy=" << dy << ", dpt=" << dpt << endl; 
+                    
+        processParameters();   // recompute beamRap, xA0, xB0, dy, dpt with the new lA/lB
 
+        cout << fixed << setprecision(6)
+             << "[CHECK] LA=" << lA << "  LB=" << lB
+             << "  xA0=" << xA0 << "  xB0=" << xB0
+             << "  qhat(xA0)=" << qhat(xA0)
+            << "  mode_alphas=" << (alphas!=0 ? alphas : -1.0) << '\n';
+     
         outTag = "minbias_";
         print_line();
         cout << "Quenching calculation started: " << ctime(&starttime);
@@ -145,8 +156,26 @@ int main(int argc, char *argv[]) {
             // Now process collisions for each bin
             for (size_t i=0; i<leff_values.size(); ++i) {
                 double LA = leff_values[i];
-                if (collisionType == 2) { lA = LA; lB = LA; }
-                else                   { lA = LA; lB = lp; }
+                
+                // Setting Lengths
+                lA = LA;
+                lB = LA;
+                
+                cout << "[DEBUG 1]: lA=" << lA << ", lB=" << lB 
+                    << ", lp=" << lp 
+                    << ", rootsnn=" << rootsnn 
+                    << ", xA0=" << xA0 << ", xB0=" << xB0 
+                    << ", dy=" << dy << ", dpt=" << dpt << endl; 
+                    
+                // >>> minimal fix:
+                processParameters();   // refresh xA0/xB0 for this bin
+    
+                cout << "[DEBUG 2]: lA=" << lA << ", lB=" << lB 
+                    << ", lp=" << lp 
+                    << ", rootsnn=" << rootsnn 
+                    << ", xA0=" << xA0 << ", xB0=" << xB0 
+                    << ", dy=" << dy << ", dpt=" << dpt << endl;
+
                 outTag = "cent_" + leff_labels[i] + "_";
                 print_line();
                 cout << "Quenching calculation started (bin " << leff_labels[i] << "%): " << ctime(&starttime);

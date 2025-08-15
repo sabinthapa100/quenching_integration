@@ -16,7 +16,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-
+#include "paramreader.h"
 using namespace std;
 
 #include "glauber.h"
@@ -29,10 +29,10 @@ double SMALL = 1e-15;
 struct ta_params { double x; double y; double A;};
 
 double woodsSaxonDist(double r, double A) {
-	double n0 = 0.17; // central density in fm^(-3)
+	// double n0 = 0.17; // central density in fm^(-3)
 	double Rn = 1.12*pow(A,1./3.) - 0.86*pow(A,-1./3.); // radius in fm 
 	double d = 0.549; // thickness in fm
-	return n0/(1+exp((r-Rn)/d));
+	return rho0/(1+exp((r-Rn)/d));
 }
 
 // generates A samples corresponding to Woods-Saxon nucleus with A nucleons
