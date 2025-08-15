@@ -14,11 +14,14 @@
 #include <cmath>
 #include <gsl/gsl_integration.h>
 #include <vector>
+#include <cmath>
+#include <algorithm>
+
 using namespace std;
 
 #include "glauber.h"
 
-double SIGMANN = 62.0; // default; will be overridden by set_sigmaNN_mb()
+double SIGMANN = 67.6; // default; will be overridden by set_sigmaNN_mb()
 void set_sigmaNN_mb(double sNN_mb) { SIGMANN = sNN_mb; }
 
 double SMALL = 1e-15;
@@ -28,7 +31,7 @@ struct ta_params { double x; double y; double A;};
 double woodsSaxonDist(double r, double A) {
 	double n0 = 0.17; // central density in fm^(-3)
 	double Rn = 1.12*pow(A,1./3.) - 0.86*pow(A,-1./3.); // radius in fm 
-	double d = 0.54; // thickness in fm
+	double d = 0.549; // thickness in fm
 	return n0/(1+exp((r-Rn)/d));
 }
 
@@ -269,10 +272,123 @@ double compute_LA_centrality_pA(double cmin, double cmax,
         Den += (long double)N         * sigmaN[N];
     }
     if (Den <= 0.0L) return Lp;
-
+	// std::cout << "[DEBUG] cmin=" << cmin << " cmax=" << cmax
+    //      << " N_low=" << N_low << " N_high=" << N_high
+    //      << " Num=" << Num << " Den=" << Den << std::endl;
     const long double denom = (long double)sigma * (long double)rho0 * Den;
-    double LA = Lp + (double)(Num / std::max(1e-30L, denom));
+    double LA = Lp + (double)(Num / std::max(1e-12L, denom));
     if (!std::isfinite(LA) || LA <= Lp) return Lp;
     return LA;
 }
 
+// Helper: N_part at impact parameter b (integrated over x, y)
+static double Npart_pA(double b, int A, double sigmaNN_mb) {
+    double sigma = sigmaNN_mb * 0.1; // mb to fm^2
+    const double xmax = b + 5.0, xmin = b - 5.0, ymax = 15.0, ymin = -15.0;
+    const int Nx = 80, Ny = 80;
+    double dx = (xmax - xmin) / Nx, dy = (ymax - ymin) / Ny;
+    double sum = 0.0;
+    for (int ix = 0; ix < Nx; ++ix) {
+        double x = xmin + (ix + 0.5) * dx;
+        for (int iy = 0; iy < Ny; ++iy) {
+            double y = ymin + (iy + 0.5) * dy;
+            // Matches Mathematica: 
+            // Tint[x + b/2, y] * (sigma * Tpint[x - b/2, y]) +
+            // Tpint[x - b/2, y] * (1 - (1 - sigma * Tint[x + b/2, y]/A)^A)
+            double TA1 = TA(x + b/2.0, y, A);
+            double Tp2 = Tp(x - b/2.0, y);
+            double term1 = TA1 * (sigma * Tp2);
+            double term2 = Tp2 * (1.0 - pow(1.0 - sigma * TA1 / A, A));
+            sum += (term1 + term2) * dx * dy;
+        }
+    }
+    return sum;
+}
+
+// Helper: probability of inelastic pA collision at impact parameter b
+static double P_pA(double b, int A, double sigmaNN_mb) {
+    double sigma = sigmaNN_mb * 0.1; // mb to fm^2
+    double tpa = 0.0;
+    const double xmax = b + 5.0, xmin = b - 5.0, ymax = 15.0, ymin = -15.0;
+    const int Nx = 80, Ny = 80;
+    double dx = (xmax - xmin) / Nx, dy = (ymax - ymin) / Ny;
+    for (int ix = 0; ix < Nx; ++ix) {
+        double x = xmin + (ix + 0.5) * dx;
+        for (int iy = 0; iy < Ny; ++iy) {
+            double y = ymin + (iy + 0.5) * dy;
+            tpa += TpA(x, y, A, b) * dx * dy;
+        }
+    }
+    return 1.0 - exp(-tpa * sigma);
+}
+
+// Find bmax for a given centrality fraction c (by integrating P(b))
+static double glauber_bmax_pA(double c, int A, double sigmaNN_mb) {
+    const double bMax = 20.0;
+    const int Nb = 400;
+    double db = bMax / Nb;
+    double total = 0.0;
+    std::vector<double> cum(Nb+1, 0.0);
+    for (int i = 0; i <= Nb; ++i) {
+        double b = i * db;
+        double prob = P_pA(b, A, sigmaNN_mb);
+        double area = 2.0 * M_PI * b * db;
+        total += prob * area;
+        cum[i] = total;
+    }
+    double target = c * total;
+    for (int i = 0; i <= Nb; ++i) {
+        if (cum[i] >= target) return i * db;
+    }
+    return bMax;
+}
+
+double compute_Npart_centrality_pA(double c0, double c1, int A, double sigmaNN_mb, double rho0, double lp) {
+    // Optical Glauber style: average N_part in centrality bin [c0, c1]
+    const double bMax = 20.0;
+    const int Nb = 400;
+    double db = bMax / Nb;
+
+    // Compute total inelastic cross section
+    double sig_inel = 0.0;
+    std::vector<double> cum(Nb+1, 0.0);
+    for (int i = 0; i <= Nb; ++i) {
+        double b = i * db;
+        double prob = P_pA(b, A, sigmaNN_mb);
+        double area = 2.0 * M_PI * b * db;
+        sig_inel += prob * area;
+        cum[i] = sig_inel;
+    }
+
+    // Find bmin and bmax for centrality bin
+    double target_min = c0 * sig_inel;
+    double target_max = c1 * sig_inel;
+    double bmin = 0.0, bmax_bin = bMax;
+    for (int i = 0; i <= Nb; ++i) {
+        if (cum[i] >= target_min) { bmin = i * db; break; }
+    }
+    for (int i = 0; i <= Nb; ++i) {
+        if (cum[i] >= target_max) { bmax_bin = i * db; break; }
+    }
+
+    // Compute bin cross section
+    double sig_bin = 0.0;
+    for (int i = 0; i < Nb; ++i) {
+        double b = bmin + (i + 0.5) * (bmax_bin - bmin) / Nb;
+        double prob = P_pA(b, A, sigmaNN_mb);
+        double area = 2.0 * M_PI * b * (bmax_bin - bmin) / Nb;
+        sig_bin += prob * area;
+    }
+
+    // Average N_part in bin
+    double num = 0.0;
+    for (int i = 0; i < Nb; ++i) {
+        double b = bmin + (i + 0.5) * (bmax_bin - bmin) / Nb;
+        double Npart = Npart_pA(b, A, sigmaNN_mb);
+        double prob = P_pA(b, A, sigmaNN_mb);
+        double area = 2.0 * M_PI * b * (bmax_bin - bmin) / Nb;
+        num += Npart * prob * area;
+    }
+    if (sig_bin > 0.0) return num / sig_bin;
+    return 1.0;
+}

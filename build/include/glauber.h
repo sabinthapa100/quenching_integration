@@ -27,5 +27,7 @@ double compute_LA_centrality_pA(double cmin, double cmax,
                                 int A, double sigmaNN_mb,
                                 double rho0, double Lp);
 
+double compute_Npart_centrality_pA(double c0, double c1, int A, double sigmaNN_mb, double rho0, double lp);
+
 #endif // __glauber_h__
 

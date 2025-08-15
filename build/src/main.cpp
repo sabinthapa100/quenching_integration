@@ -88,8 +88,8 @@ int main(int argc, char *argv[]) {
         // Use it automatically
         if (collisionType == 2) {               // AA
             lA = LA; lB = LA;
-        } else {                                // pA or both -> assume pA geometry
-            lA = LA; lB = lp;
+        } else {                               
+            lA = LA; lB = lp; // lB is ignored for pA
         }
 
         outTag = "minbias_";
@@ -102,7 +102,6 @@ int main(int argc, char *argv[]) {
     } 
     else {
         // ---- CENTRALITY ----
-        // priority: user table (centralityEdges) > single (cmin/cmax) > defaults
         std::vector<double> edges;
         if (!centralityEdges.empty()) {
             edges = centralityEdges;                    // already in percent
@@ -115,48 +114,48 @@ int main(int argc, char *argv[]) {
         if (edges.size() < 2) {
             cerr << "centralityEdges has fewer than 2 entries; falling back to min-bias.\n";
             double LA = compute_LA_minbias_pA(A, rho0, lp);
-            if (collisionType == 2) { lA = LA; lB = LA; }
-            else                     { lA = LA; lB = lp; }
-            outTag = "minbias_";
-            print_line();
-            cout << "Quenching calculation started: " << ctime(&starttime);
-            create_output_directory();
-            print_line();
-            processCollision(collisionType);
+            cout << "[MIN-BIAS fallback] L_eff = " << LA << " fm\n";
         } else {
             cout << "Centrality edges (percent):";
             for (size_t i=0;i<edges.size();++i) cout << (i?", ":" ") << edges[i];
             cout << " %\n";
 
-            // iterate over adjacent edge pairs
+            // Compute and summarize L_eff for all bins
+            std::vector<double> leff_values;
+            std::vector<double> npart_values;
+            std::vector<std::string> leff_labels;
             for (size_t i=0; i+1<edges.size(); ++i) {
                 double c0p = edges[i];
                 double c1p = edges[i+1];
-                double c0  = c0p/100.0;  // fractions for Glauber
+                double c0  = c0p/100.0;
                 double c1  = c1p/100.0;
-
                 double LA = compute_LA_centrality_pA(c0, c1, A, sigmaNN_mb, rho0, lp);
-                cout << std::fixed << setprecision(6)
-                     << "[CENT " << c0p << "-" << c1p << "%] L_eff = " << LA << " fm\n";
+                leff_values.push_back(LA);
+                leff_labels.push_back(std::to_string((int)c0p) + "-" + std::to_string((int)c1p));
+                double npart = compute_Npart_centrality_pA(c0, c1, A, sigmaNN_mb, rho0, lp);
+                npart_values.push_back(npart);
+            }
+            print_line();
+            std::cout << "Summary of L_eff for all centrality bins:\n";
+            for (size_t i=0; i<leff_values.size(); ++i) {
+                std::cout << "  Bin " << leff_labels[i] << "%: L_eff = " << leff_values[i] << " fm, " << "<N_part> = " << npart_values[i] << "\n";
+            }
+            print_line();
 
-                // set path lengths for this bin
-                if (collisionType == 2) { lA = LA; lB = LA; } // AA
-                else                     { lA = LA; lB = lp; } // pA
-
-                // per-bin outputs (requires processCollision to prepend outTag to filenames)
-                outTag = "cent_" + std::to_string((int)c0p) + "-" + std::to_string((int)c1p) + "_";
-
+            // Now process collisions for each bin
+            for (size_t i=0; i<leff_values.size(); ++i) {
+                double LA = leff_values[i];
+                if (collisionType == 2) { lA = LA; lB = LA; }
+                else                   { lA = LA; lB = lp; }
+                outTag = "cent_" + leff_labels[i] + "_";
                 print_line();
-                cout << "Quenching calculation started (bin " << c0p << "-" << c1p << "%): "
-                     << ctime(&starttime);
+                cout << "Quenching calculation started (bin " << leff_labels[i] << "%): " << ctime(&starttime);
                 create_output_directory();
                 print_line();
-
                 processCollision(collisionType);
             }
         }
     }
-
     // done
     print_line();
     auto endtime = chrono::system_clock::to_time_t(chrono::system_clock::now());

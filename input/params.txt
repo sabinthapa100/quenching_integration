@@ -8,10 +8,10 @@ A	208
 
 // Type of Collision: 0 for both pA and AB collision [DEFAULT]
 // 1 for pA collision only, 2 for AB collision only
-collisionType	0
+collisionType	1
 
 // Particle Type: 0 for Upsilon, 1 for J/Psi
-particleType   0 
+particleType   0
 
 
 // Strong coupling constant (Alpha_s)
@@ -31,16 +31,17 @@ qhat0         0.075
 // ----------------------------------------------------------
 // Different Centralities Collision: 0 (minbias-OFF) 1(YES)
 // ------------------------------------------------------
-useCentrality	0
+useCentrality	1
 // LHC ==> 0-20-40-60-100%; RHIC ==>0-20-40-60-88%
 centralityEdges  0,20,40,60,100
+// centralityEdges  0,10,20,30,40,50,60,70,80,90,100
+// centralityEdges  0,20,40,60,80,100
 
 // ------------------------------------------------
 // Effective Path Lengths: Min Bias Collision
 // ------------------------------------------------
 // Proton-nuclei effective path length (Lp) in fm
 lp            1.5     
-
 
 // ------------------------------------------------
 // Proton Parameters:
