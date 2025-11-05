@@ -191,9 +191,9 @@ void processParameters() {
     } 
     
     else if (particleType == 1) { // J/Psi
-        double massQQ = 3.43; //average mass of J/psi, Chi(1P), Psi(2S)
+        massQQ = 3.43; //average mass of J/psi, Chi(1P), Psi(2S)
         // J/Psi -- parameters useful in the pp cross-section parametrization
-	//double massQQ = 3.0969; //J/Psi mass only
+	// double massQQ = 3.0969; //J/Psi mass only
         p0 = 4.2;
         m = 3.5;
         n = 19.2;

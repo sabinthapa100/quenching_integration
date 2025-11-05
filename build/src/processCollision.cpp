@@ -91,7 +91,7 @@ void processCollision(int collisionType) {
 
                 // --- NEW: include particle name in printed label ---
                 std::string lblRpA = "RpA: " + ptag;
-                printResult(lblRpA.c_str(), y, pt, resultRpA, errorRpA);
+                // printResult(lblRpA.c_str(), y, pt, resultRpA, errorRpA);
 
                 output_file_3 << y << "\t" << pt << "\t" << resultRpA << "\t" << errorRpA << endl;
             }
@@ -108,7 +108,7 @@ void processCollision(int collisionType) {
 
                 // --- NEW: include particle name in printed label ---
                 std::string lblRAB = "RAB: " + ptag;
-                printResult(lblRAB.c_str(), y, pt, resultRAB, errorRAB);
+                // printResult(lblRAB.c_str(), y, pt, resultRAB, errorRAB);
 
                 output_file_5 << y << "\t" << pt << "\t" << resultRAB << "\t" << errorRAB << endl;
             }

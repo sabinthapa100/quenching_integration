@@ -2,7 +2,7 @@
  
  main.cpp
  
- Copyright (c) Michael Strickland and Sabin Thapa
+ Copyright (c) Sabin Thapa & Michael Strickland 
  
  GNU General Public License (GPLv3)
  See detailed text in license directory
@@ -39,7 +39,12 @@ static double select_sigmaNN_mb(double roots) {
     if (fabs(roots - 8160.0) < 1e-6) return 71.0;   // LHC 8.16
     return 67.6;                                    // fallback
 }
+void print_pA_centrality_table(const std::vector<double>& edges_percent,
+                               int A, double sigmaNN_mb, double rho0, double Lp,
+                               const std::string& Leff_method);
 
+// ---- CENTRALITY ----
+std::vector<double> edges;
 // default centrality edges in percent (0..100)
 static std::vector<double> default_edges(double roots, int A) {
     std::vector<double> e;
@@ -130,6 +135,15 @@ int main(int argc, char *argv[]) {
             cout << "Centrality edges (percent):";
             for (size_t i=0;i<edges.size();++i) cout << (i?", ":" ") << edges[i];
             cout << " %\n";
+    
+            // >>> print BOTH Glauber summaries before any quenching calculation
+            print_line();
+            cout << "Centrality summary (p+Pb, Glauber) — Binomial L_eff:\n";
+            print_pA_centrality_table(edges, A, sigmaNN_mb, rho0, lp, "binomial");
+            print_line();
+            cout << "Centrality summary (p+Pb, Glauber) — Optical L_eff:\n";
+            print_pA_centrality_table(edges, A, sigmaNN_mb, rho0, lp, "optical");
+            print_line();
 
             // Compute and summarize L_eff for all bins
             std::vector<double> leff_values;
@@ -146,12 +160,6 @@ int main(int argc, char *argv[]) {
                 double npart = compute_Npart_centrality_pA(c0, c1, A, sigmaNN_mb, rho0, lp);
                 npart_values.push_back(npart);
             }
-            print_line();
-            std::cout << "Summary of L_eff for all centrality bins:\n";
-            for (size_t i=0; i<leff_values.size(); ++i) {
-                std::cout << "  Bin " << leff_labels[i] << "%: L_eff = " << leff_values[i] << " fm, " << "<N_part> = " << npart_values[i] << "\n";
-            }
-            print_line();
 
             // Now process collisions for each bin
             for (size_t i=0; i<leff_values.size(); ++i) {
@@ -170,12 +178,6 @@ int main(int argc, char *argv[]) {
                 // >>> minimal fix:
                 processParameters();   // refresh xA0/xB0 for this bin
     
-                cout << "[DEBUG 2]: lA=" << lA << ", lB=" << lB 
-                    << ", lp=" << lp 
-                    << ", rootsnn=" << rootsnn 
-                    << ", xA0=" << xA0 << ", xB0=" << xB0 
-                    << ", dy=" << dy << ", dpt=" << dpt << endl;
-
                 outTag = "cent_" + leff_labels[i] + "_";
                 print_line();
                 cout << "Quenching calculation started (bin " << leff_labels[i] << "%): " << ctime(&starttime);
@@ -183,10 +185,19 @@ int main(int argc, char *argv[]) {
                 print_line();
                 processCollision(collisionType);
             }
+            
+            print_line();
+            std::cout << "Summary of L_eff for all centrality bins:\n";
+            for (size_t i=0; i<leff_values.size(); ++i) {
+                std::cout << "  Bin " << leff_labels[i] << "%: L_eff = " << leff_values[i] << " fm, " << "<N_part> = " << npart_values[i] << "\n";
+            }
+            print_line();
+            
         }
     }
     // done
     print_line();
+    
     auto endtime = chrono::system_clock::to_time_t(chrono::system_clock::now());
     cout << "Done: " << ctime(&endtime);
     print_line(); // cosmetic

@@ -11,31 +11,35 @@ A	208
 collisionType	1
 
 // Particle Type: 0 for Upsilon, 1 for J/Psi
-particleType   0
+particleType   1
 
 
 // Strong coupling constant (Alpha_s)
-// if alphas = 0, then use 4-loop running with mu = dpt 
-alphas        1
+// if alphas = 0, then use 4-loop running with mu = dpt_A
+// at lambda QCD = 0.308, alpha_s(lambdaQCD) = 0.326; if alphas = 0, then it takes running coupling
+alphas    0.326   
 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
 //lambdaQCD 	0.25;
 lambdaQCD     0.308       
 
-// Cold Nuclear Matter Transport coefficient qhat0 in GeV^2/fm; 
-//Can have values: 0.051 and 0.075 at x = 10^-2
+// Cold Nuclear Matter Transport coefficient qhat0 in GeV^2/fm;  (0.07-0.09)
+//Can have values: 0.051 and 0.075 at x = 10^-2 
+// https://arxiv.org/pdf/1212.0434
 // Ref: https://arxiv.org/abs/2004.07188
 qhat0         0.075       
+// qhat0         0.051
+// qhat0         0.09
 
 // ----------------------------------------------------------
 // Different Centralities Collision: 0 (minbias-OFF) 1(YES)
 // ------------------------------------------------------
-useCentrality	0
+useCentrality	1
 // LHC ==> 0-20-40-60-100%; RHIC ==>0-20-40-60-88%
-centralityEdges  0,20,40,60,100
+// centralityEdges  0,20,40,60,100
+centralityEdges  0,10,20,40,60,80,100
 // centralityEdges  0,10,20,30,40,50,60,70,80,90,100
-// centralityEdges  0,20,40,60,80,100
 
 // ------------------------------------------------
 // Effective Path Lengths: Min Bias Collision
@@ -54,8 +58,8 @@ massp         0.938
 // ------------------------------------------------
 
 // Center-of-mass collision energy (sqrt(s_NN)) in GeV
-rootsnn       5023
-// rootsnn       8160        
+// rootsnn       5023
+rootsnn       8160        
 
 
 // Parameters for integration (pt, y points)

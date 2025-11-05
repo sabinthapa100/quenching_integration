@@ -40,7 +40,7 @@ extern double dy, dpt;
 inline double Mperp2(double pt);
 inline double Mperp(double pt);
 inline double ymax(double pt);
-inline double qhat(double x);
+double qhat(double x);
 inline double xA2(double y, double pt);
 inline double xB2(double y, double pt);
 inline double myXA(double y, double pt);

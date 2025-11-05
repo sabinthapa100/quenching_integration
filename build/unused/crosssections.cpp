@@ -18,12 +18,12 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_sf_dilog.h>
 #include <numeric> 
-#include <fstream>
+
 #include "cuba.h"
 #include "paramreader.h"
 #include "runningcoupling.h"
 #include "crosssections.h"
-#include <iomanip>
+
 #include <omp.h>
 
 #include "main.h"
@@ -76,76 +76,6 @@ static inline double clampExpArg(double x, double lo, double hi){ return (x<lo?l
 constexpr double zMinFloor = 1e-8; // avoid z→0 singularity
 
 // ------------------------------------------------------------------
-// Debugger
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// Single-CSV diagnostics (compact): ΔpT scales, running αs, 1 quench sample
-// Writes: output/<outTag>diagnostics.csv
-// Columns:
-//   y,pt,mu_A,alphaA,muB,alphaB,dyAmax,dyBmax,zA_med,PhA_med,zB_med,PhB_med
-// Logs only every LOG_STRIDE_Y and LOG_STRIDE_PT grid point to keep files small.
-// ------------------------------------------------------------------
-void debug_dump_scales(double y, double pt) {
-    static std::ofstream f;
-    static std::string last_prefix;
-    static bool header_written = false;
-
-    // --- reduce rows: log every Kth grid point
-    static const int LOG_STRIDE_Y  = 2;  // change to 3/4 if you want even fewer rows
-    static const int LOG_STRIDE_PT = 2;
-    const int iy = (int) llround((y  - y_min )/dy );
-    const int ip = (int) llround((pt - ptmin)/dpt);
-    if (iy < 0 || ip < 0) return;
-    if ((iy % LOG_STRIDE_Y) != 0 || (ip % LOG_STRIDE_PT) != 0) return;
-
-    const std::string filepath = "output/" + outTag + "diagnostics.csv";
-
-    // (Re)open file if first time or outTag changed (new centrality/bin)
-    if (!f.is_open() || last_prefix != outTag) {
-        if (f.is_open()) f.close();
-        last_prefix = outTag;
-        header_written = false;
-        f.open(filepath.c_str(), std::ios::out | std::ios::trunc);
-        if (!f) { std::cerr << "Cannot open " << filepath << " for writing.\n"; return; }
-    }
-
-    if (!header_written) {
-        f << "y,pt,"
-          << "muA,dpT_A,dpT_B,alphaA,muB,alphaB,"
-          << "dyAmax,dyBmax,"
-          << "zA_med,PhA_med,zB_med,PhB_med\n";
-        header_written = true;
-    }
-
-    // Scales & couplings actually used
-    // const double mu_A = dptA(y, pt);
-    // const double mu_B = dptB(y, pt);
-    double mu_A = Mperp (pt);
-    double mu_B = Mperp (pt);
-    const double aA  = (alphas != 0 ? alphas : runningCoupling(mu_A));
-    const double aB  = (alphas != 0 ? alphas : runningCoupling(mu_B));
-
-    // Rapidity windows
-    const double dyAmax = dymax(+y, pt);
-    const double dyBmax = dymax(-y, pt);
-
-    // Median quenching sample (δy = 0.5 * δy_max)
-    const double zA = std::exp(0.5*dyAmax) - 1.0;
-    const double zB = std::exp(0.5*dyBmax) - 1.0;
-    const double PhA = PhatA(zA, y, pt, aA);
-    const double PhB = PhatB(zB, y, pt, aB);
-
-    #pragma omp critical
-    {
-        f << std::setprecision(10)
-          << y  << ',' << pt << ','
-          << mu_A << ',' << dptA(y, pt) << ',' << dptB(y, pt)<< ',' << aA << ',' << mu_B << ',' << aB << ','
-          << dyAmax << ',' << dyBmax << ','
-          << zA << ',' << PhA << ',' << zB << ',' << PhB << '\n';
-    }
-}
-
-// ------------------------------------------------------------------
 // physics helpers
 // ------------------------------------------------------------------
 inline double Mperp2(double pt) { return pt*pt + massQQ*massQQ; }
@@ -158,9 +88,10 @@ double qhat(double x) { return qhat0 * std::pow(1.0e-2 / x, 0.3); }
 
 // Bjorken-x on A and B sides (COM rapidity y)
 // *** IMPORTANT SIGN CONVENTION ***
-//   x_A ~ e^{-y}, x_B ~ e^{-y}.  Sign flip is whenever needed;
+//   x_A ~ e^{-y}, x_B ~ e^{+y}.  No explicit sign flip is needed elsewhere;
+//   pass the same y into A- and B-side functions; the exponentials here take care of it.
 inline double xA2(double y, double pt) { return Mperp(pt) / rootsnn * std::exp(-y); }
-inline double xB2(double y, double pt) { return Mperp(pt) / rootsnn * std::exp(-y); }
+inline double xB2(double y, double pt) { return Mperp(pt) / rootsnn * std::exp(+y); }
 
 inline double myXA(double y, double pt) { return std::min(xA0, xA2(y, pt)); }
 inline double myXB(double y, double pt) { return std::min(xB0, xB2(y, pt)); }
@@ -266,22 +197,27 @@ inline double shiftedPTAB(double pt, double dptb, double dpta, double phiB, doub
 // ------------------------------------------------------------------
 // pA integrand (2D): x = (ua, phiA)
 // ------------------------------------------------------------------
-int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata)
+int scaledpAIntegrand(const int* /*ndim*/, const cubareal xx[], const int* /*ncomp*/, cubareal ff[], void* userdata)
 {
     Parameters* P = reinterpret_cast<Parameters*>(userdata);
-    
-    // Rescale ua and phiA to [0,1]
-    // scaled values
-    double ua = uMin + xx[0]*(P->uaMax-uMin);
-    double phiA = xx[1]*2*M_PI;
-    
-    double dpta = dptA(P->y,P->pt);
-    double shiftedPt = shiftedPTpA(P->pt, dpta, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, P->y, P->pt, P->alphas_a);
-    double dsigVal = dsigdyd2pt(P->y + exp(ua), shiftedPt);
-    
-    ff[0] = exp(ua) * phatAVal * dsigVal;
-    
+
+    const double ua   = uMin + xx[0]*(P->uaMax - uMin);
+    const double phiA = xx[1]*2.0*M_PI;
+
+    double z = std::exp(std::exp(ua)) - 1.0;
+    if (!(z > zMinFloor)) z = zMinFloor;
+
+    // compute Phat first; if zero, skip rest (speed & stability)
+    const double phatAVal = PhatA(z, P->y, P->pt, P->alphas_a);
+    if (phatAVal <= 0.0) { ff[0] = 0.0; return 0; }
+
+    const double dpta      = dptA(P->y, P->pt);
+    const double shiftedPt = shiftedPTpA(P->pt, dpta, phiA);
+    const double dsigVal   = dsigdyd2pt(P->y + std::exp(ua), shiftedPt);
+
+    double val = std::exp(ua) * phatAVal * dsigVal;
+    if (!std::isfinite(val) || val <= 0.0) val = 0.0;
+    ff[0] = val;
     return 0;
 }
 
@@ -290,25 +226,34 @@ int scaledpAIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cu
 // y + δy_B - δy_A, with δy_{A,B} = exp(u_{a,b})
 // Limits: uaMax=log(dymax(-y,pt)), ubMax=log(dymax(+y,pt))
 // ------------------------------------------------------------------
-int scaledABIntegrand(const int* ndim, const cubareal xx[], const int* ncomp, cubareal ff[], void* userdata)
+int scaledABIntegrand(const int* /*ndim*/, const cubareal xx[], const int* /*ncomp*/, cubareal ff[], void* userdata)
 {
     Parameters* p = reinterpret_cast<Parameters*>(userdata);
-    
-    // Rescale ua and ub to [0, 1]
-    // scaled values
-    double ub = uMin + xx[0]*(p->ubMax-uMin);
-    double ua = uMin + xx[1]*(p->uaMax-uMin);
-    double phiB = xx[2]*2*M_PI;
-    double phiA = xx[3]*2*M_PI;
-    
-    double dptb = dptB(p->y,p->pt);
-    double dpta = dptA(-p->y,p->pt);
-    double shiftedPt = shiftedPTAB(p->pt, dptb, dpta, phiB, phiA);
-    double phatAVal = PhatA(exp(exp(ua)) - 1, -p->y, p->pt, p->alphas_a); // + in A, - in B
-    double phatBVal = PhatB(exp(exp(ub)) - 1, p->y, p->pt, p->alphas_b);
-    double dsigVal = dsigdyd2pt(p->y + exp(ub) - exp(ua), shiftedPt);
-    ff[0] = exp(ub) * exp(ua) * phatBVal * phatAVal * dsigVal;
-    
+
+    const double ub   = uMin + xx[0]*(p->ubMax - uMin);
+    const double ua   = uMin + xx[1]*(p->uaMax - uMin);
+    const double phiB = xx[2]*2.0*M_PI;
+    const double phiA = xx[3]*2.0*M_PI;
+
+    double zA = std::exp(std::exp(ua)) - 1.0;
+    double zB = std::exp(std::exp(ub)) - 1.0;
+    if (!(zA > zMinFloor)) zA = zMinFloor;
+    if (!(zB > zMinFloor)) zB = zMinFloor;
+
+    const double phatAVal = PhatA(zA, p->y, p->pt, p->alphas_a);
+    if (phatAVal <= 0.0) { ff[0] = 0.0; return 0; }
+    const double phatBVal = PhatB(zB, p->y, p->pt, p->alphas_b);
+    if (phatBVal <= 0.0) { ff[0] = 0.0; return 0; }
+
+    const double dptb      = dptB(p->y, p->pt);
+    const double dpta      = dptA(p->y, p->pt);
+    const double shiftedPt = shiftedPTAB(p->pt, dptb, dpta, phiB, phiA);
+
+    const double dsigVal = dsigdyd2pt(p->y + std::exp(ub) - std::exp(ua), shiftedPt);
+
+    double val = std::exp(ua) * std::exp(ub) * phatAVal * phatBVal * dsigVal;
+    if (!std::isfinite(val) || val <= 0.0) val = 0.0;
+    ff[0] = val;
     return 0;
 }
 
@@ -326,15 +271,11 @@ void pACrossSection(double y, double pt, double* res, double* err) {
     Parameters P;
     P.y = y;
     P.pt = pt;
-    P.uaMax    = std::log(dymax( y, pt));                      
-    // P.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(y, pt)));
-    // double mu_A = dptA(y, pt);
-    double mu_A = Mperp (pt);
-    P.alphas_a = (alphas != 0 ? alphas : runningCoupling(mu_A));
+    P.uaMax    = std::log(dymax( y, pt));                      // δy_A^max(+y)
+    P.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(y, pt)));
+
     if (P.uaMax < uMin) P.uaMax = uMin;
-    
-    debug_dump_scales(y, pt);
-    
+
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
 
@@ -361,18 +302,15 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     Parameters p;
     p.y  = y;
     p.pt = pt;
+    // AB limits: A uses -y bound, B uses +y bound (see dymax comments)
     p.uaMax    = std::log(dymax(-y, pt));                      // δy_A^max(-y)
     p.ubMax    = std::log(dymax( y, pt));                      // δy_B^max(+y)
-    // p.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(y, pt)));
-    // p.alphas_b = (alphas != 0 ? alphas : runningCoupling(dptB(y, pt)));
-    double mu_A = Mperp (pt);
-    double mu_B = Mperp (pt);
-    p.alphas_a = (alphas != 0 ? alphas : runningCoupling(mu_A));
-    p.alphas_b = (alphas != 0 ? alphas : runningCoupling(mu_B));
-    
+    p.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(y, pt)));
+    p.alphas_b = (alphas != 0 ? alphas : runningCoupling(dptB(y, pt)));
+
     if (p.uaMax < uMin) p.uaMax = uMin;
     if (p.ubMax < uMin) p.ubMax = uMin;
-    
+
     cubareal integral_result, error, prob;
     int nregions, neval, fail;
 
@@ -388,5 +326,4 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
     *err = (p.ubMax - uMin) * (p.uaMax - uMin) * error;
     if (!std::isfinite(*res) || *res < 0.0) *res = 0.0;
 }
-
 
