@@ -4,7 +4,7 @@ set -euo pipefail
 # --- User knobs (set via env) ---
 PARAMS_FILE="${PARAMS_FILE:-input/params.txt}"
 QUENCH_BIN="${QUENCH_BIN:-./quenching}"
-QHAT_VALUES=(${QHAT_VALUES:-0.051 0.075 0.09})
+QHAT_VALUES=(${QHAT_VALUES:-0.05 0.075 0.09})
 ALPHA_MODES=(${ALPHA_MODES:-1 0})        # 1=constant, 0=running
 FORCE="${FORCE:-0}"                      # 1 to overwrite
 DRYRUN="${DRYRUN:-0}"

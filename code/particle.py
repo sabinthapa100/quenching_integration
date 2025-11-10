@@ -74,24 +74,28 @@ class Particle:
         return np.log(np.asarray(roots_GeV, float) / np.asarray(mT_GeV, float))
 
     # 2→1 model: x1=(M⊥/√s)e^{+y}, x2=(M⊥/√s)e^{-y}
+    @staticmethod
     def x1x2_2to1(self, y, pT_GeV, roots_GeV) -> Tuple[np.ndarray, np.ndarray]:
         y = np.asarray(y, float)
         mT = self.mT(pT_GeV)
         fac = mT/float(roots_GeV)
         return fac*np.exp(+y), fac*np.exp(-y)
 
-    # A/B sides
-    #  x_A ~ e^{+y}, x_B ~ e^{+y}.  Sign flip is whenever needed;
-    @staticmethod
-    def xA(self, y, pT_GeV, roots_GeV):  # target
-        y = np.asarray(y, float); mT = self.mT(pT_GeV)
-        return (mT/float(roots_GeV))*np.exp(-y)
-    
-    @staticmethod
-    def xB(self, y, pT_GeV, roots_GeV):  # projectile
-        y = np.asarray(y, float); mT = self.mT(pT_GeV)
-        return (mT/float(roots_GeV))*np.exp(+y)
-
+    # @staticmethod # 2-->1 process, x_1 = mT/sqrt(s_NN) * exp(+y)
+    def x1(self, y, pT_GeV, roots_GeV) -> Tuple[np.ndarray, np.ndarray]:
+        y = np.asarray(y, float)
+        mT = self.mT(pT_GeV)
+        fac = mT/float(roots_GeV)
+        return fac*np.exp(+y)
+    ## Equation 44
+    # @staticmethod # 2-->1 process, x_2, x_2 = mT/sqrt(s_NN) * exp(-y)
+    def x2(self, y, pT_GeV, roots_GeV) -> Tuple[np.ndarray, np.ndarray]:
+        y = np.asarray(y, float)
+        mT = self.mT(pT_GeV)
+        fac = mT/float(roots_GeV)
+        return fac*np.exp(-y)
+        
+    ## Centrality Dependent x_0 = 1 / (2 m_p_GeV * L_eff_fm / ħc)
     @staticmethod
     def xA0_from_LA(LA_fm: float, m_p_GeV: float = M_PROTON_GeV) -> float:
         # x_{A0} = 1 / (2 m_p L_A / ħc)
@@ -101,10 +105,19 @@ class Particle:
     def xB0_from_LB(LB_fm: float, m_p_GeV: float = M_PROTON_GeV) -> float:
         # x_{A0} = 1 / (2 m_p L_B / ħc)
         return 1.0 / (2.0 * m_p_GeV * (LB_fm / HBARC_GeV_fm))
-
-    def xA_min(self, y, pT_GeV, roots_GeV, LA_fm: float):
-        xa = self.xA(y, pT_GeV, roots_GeV); x0 = self.xA0_from_LA(LA_fm)
-        return np.minimum(xa, x0)
+    # A/B sides
+    #  x_A = min(x_A0, x_2);  x_B = min(x_B0, x_2)
+    # @staticmethod
+    def xA(self, y, pT_GeV, roots_GeV, LA_fm: float):  
+        x2 = self.x2(y, pT_GeV, roots_GeV)
+        x0 = self.xA0_from_LA(LA_fm)
+        return np.minimum(x2, x0)
+    # x_B = min(x_B0, x_2)
+    # @staticmethod
+    def xB(self, y, pT_GeV, roots_GeV, LB_fm: float): 
+        x2 = self.x2(y, pT_GeV, roots_GeV)
+        x0 = self.xB0_from_LB(LB_fm)
+        return np.minimum(x2, x0)
 
     # ---- pp spectrum (shape only; overall N handled elsewhere) ----
     def _F1(self, pT_GeV):

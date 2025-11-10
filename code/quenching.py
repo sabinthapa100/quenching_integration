@@ -2,7 +2,7 @@
 # Coherent energy-loss (Arleo–Peigné) kernels + stable, fast integrators
 # Units:   L, lp in fm;  qhat0 in GeV^2/fm;  ℓ², Λ_p², mT², pT² in GeV²;  αs dimensionless
 # Physics: P̂ is the derivative of the Sudakov factor built from the single-gluon spectrum
-#          with ℓ² = q̂(x) L,  Λ_p² = max(q̂(x) lp , λ_QCD²).  See notes in docstrings below.
+#          with ℓ² = q̂(x) L,  Λ_p² = max(l_p^2 = q̂(x) L_p , λ_QCD²).  See notes in docstrings below.
 
 from __future__ import annotations
 from dataclasses import dataclass
@@ -73,7 +73,7 @@ class QuenchParams:
 # ----------------- small-x ingredients --------------------------------------
 def qhat_of_x(x: np.ndarray | float, qhat0: float) -> np.ndarray | float:
     r""" \hat{q}(x) = qhat0 * (1e-2/x)^0.3    (dimension: GeV^2/fm) """
-    xx = np.maximum(np.asarray(x, float), 1e-30)
+    xx = np.maximum(np.asarray(x, float), 1e-12)
     return qhat0 * (1.0e-2/xx)**0.3
 
 def xA0_from_L(L_fm: float, m_p: float = M_PROTON) -> float:
@@ -92,14 +92,34 @@ def _l2(qpar: QuenchParams, x: np.ndarray | float, L_fm: float) -> np.ndarray | 
     return qhat_of_x(x, qpar.qhat0) * L_fm
 
 def _Lambda_p2(qpar: QuenchParams, x: np.ndarray | float) -> np.ndarray | float:
-    r""" Λ_p² = max( \hat{q}(x) ℓ_p , λ_QCD² )   [GeV²] """
-    return np.maximum(qhat_of_x(x, qpar.qhat0)*qpar.lp_fm, qpar.lambdaQCD*qpar.lambdaQCD)
+    """
+    Correct: Λ_p² = max(ℓ_p², λ_QCD²) with ℓ_p² = q̂(x) * ℓ_p   (GeV²)
+    """
+    qx = qhat_of_x(x, qpar.qhat0)                  # GeV²/fm
+    lp2 = np.asarray(qx, float) * float(qpar.lp_fm)  # GeV²
+    lam2 = float(qpar.lambdaQCD) ** 2               # GeV²
+    return np.maximum(lp2, lam2)
+
+def _soft_pos(x: float, width: float = 1e-3) -> float:
+    # smooth max(x,0) ~ eliminates cusps when lA2 ≈ lp2
+    # width ~ O(1e-3) in GeV^2 works well; pure numerical, no physics change at percent level
+    return 0.5*(x + math.sqrt(x*x + width*width))
+    
+def dpt_L_fm(qpar: QuenchParams, x: float, L_fm: float) -> float:
+    """
+    ΔpT = sqrt( max(ℓ_A² - ℓ_p², 0) ), with ℓ_A² = q̂(x)*L_A, ℓ_p² = q̂(x)*L_p; L_p = 1.5 fm
+    """
+    qx  = float(qhat_of_x(x, qpar.qhat0))
+    lA2 = qx * float(L_fm)
+    lp2 = qx * float(qpar.lp_fm)
+    # return math.sqrt(max(lA2 - lp2, 0.0))
+    return math.sqrt(_soft_pos(lA2 - lp2))
 
 def dpt_side(qpar: QuenchParams, x: float, L_fm: float) -> float:
-    """ ΔpT_side = sqrt( max(ℓ² - Λ_p², 0) ) [GeV] """
-    l2  = float(_l2(qpar, x, L_fm))
-    Lp2 = float(_Lambda_p2(qpar, x))      # <-- use max(qhat*lp, λ_QCD²)
-    return math.sqrt(max(l2 - Lp2, 0.0))
+    """
+    Side-specific ΔpT used in φ-averaging.
+    """
+    return dpt_L_fm(qpar, x, L_fm)
 
 # ----------------- αs(μ) selection ------------------------------------------
 def _alpha_mu(qpar: QuenchParams, side: str, y: float, pt: float, mT: float, x: float) -> float:
@@ -121,18 +141,17 @@ def _Phat_core(z: float, Mperp2: float, l2: float, Lp2: float, a: float, Nc: int
     P̂(z) =  (αs Nc / 2π) * d/dz [ ln(1 + ℓ²/(z² M⊥²)) - ln(1 + Λ_p²/(z² M⊥²)) ]
              × exp{ (αs Nc / 2π) [ Li2( -ℓ²/(z² M⊥²) ) - Li2( -Λ_p²/(z² M⊥²) ) ] }
     Notes:
-      • exponent sign and content matches AP and your C++ (exp(+…)).
       • z = e^{δy} - 1 ≥ 0.  We clamp to Z_FLOOR to avoid z=0.
     """
     if not (z > Z_FLOOR):
         z = Z_FLOOR
     if l2 <= Lp2:
         return 0.0
-    inv = 1.0/(z*z*Mperp2)
+    inv  = 1.0/(z*z*Mperp2)
     expo = a*Nc*(Li2(-l2*inv) - Li2(-Lp2*inv)) / (2.0*math.pi)
-    expo = max(min(expo, 700.0), -700.0)  # exp safety
-    deriv = 2.0*(math.log1p(l2*inv) - math.log1p(Lp2*inv))/z
-    val = (a * math.exp(expo) * Nc * deriv) / (2.0*math.pi)
+    expo = max(min(expo, 700.0), -700.0)                        
+    deriv_f = 2.0*(math.log1p(l2*inv) - math.log1p(Lp2*inv))/z
+    val = (a * math.exp(expo) * Nc * deriv_f) / (2.0*math.pi)
     return val if (val > 0.0 and math.isfinite(val)) else 0.0
 
 def _Phat_core_vec(z: np.ndarray, Mperp2: float, l2: float, Lp2: float, a: float, Nc: int) -> np.ndarray:
@@ -142,11 +161,15 @@ def _Phat_core_vec(z: np.ndarray, Mperp2: float, l2: float, Lp2: float, a: float
     inv  = 1.0/(z*z*Mperp2)
     expo = (a*Nc/(2.0*math.pi))*(np.vectorize(Li2)(-l2*inv) - np.vectorize(Li2)(-Lp2*inv))
     expo = np.clip(expo, -700.0, 700.0)
-    deriv = 2.0*(np.log1p(l2*inv) - np.log1p(Lp2*inv))/z
-    val = (a*np.exp(expo)*Nc*deriv)/(2.0*math.pi)
+    deriv_f  = 2.0*(np.log1p(l2*inv) - np.log1p(Lp2*inv))/z
+    val = (a*np.exp(expo)*Nc*deriv_f)/(2.0*math.pi)
     val[~np.isfinite(val) | (val < 0.0)] = 0.0
     return val
 
+def z_from_dy(dy: float) -> float:
+    """z = e^{δy} - 1"""
+    return math.expm1(float(dy))
+    
 def PhatA_vec(z_arr: np.ndarray, y: float, pt: float, mT: float, xA: float, qpar: QuenchParams) -> np.ndarray:
     l2  = float(_l2(qpar, xA, qpar.LA_fm))
     Lp2 = float(_Lambda_p2(qpar, xA))
@@ -181,10 +204,10 @@ def pA_cross_section(y: float, pt: float, mT: float,
                      xA: float, xB_unused: float, y_max_pt: float,
                      dsig_pp: Callable[[float, np.ndarray], np.ndarray],
                      qpar: QuenchParams, Ny: int = 80, Nphi: int = 48,
-                     adaptive: bool = True) -> float:
+                     adaptive: bool = False) -> float:
     """
     σ_pA(y,pt) = ∫_{0}^{δy_max(+y)} d(δy) ∫ dφ_A/(2π)  P̂_A(z) · σ_pp(y+δy, |p⃗_T − Δp⃗_T^A|)
-    z = e^{δy} − 1;   Δp_T^A = sqrt( max(ℓ_A² − Λ_{p,A}², 0) )
+    z = e^{δy} − 1;   Δp_T^A = sqrt( max(ℓ_A² - l_p², 0) )
     """
     dym = dymax(+y, y_max_pt)
     if dym <= 1e-12 or _l2(qpar, xA, qpar.LA_fm) <= _Lambda_p2(qpar, xA):

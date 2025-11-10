@@ -4,3 +4,12 @@ output*/*
 build/obj
 quenching
 log.txt
+.vscode
+data_analysis/.ipynb_checkpoints
+data_analysis/__pycache__
+
+code/.ipynb_checkpoints
+code/__pycache__
+code/.venv
+
+updates

@@ -69,7 +69,7 @@ double dy  = (y_max - y_min) / (Ny-1);
 double dpt = (ptmax - ptmin) / (Npt-1);
 
 // ------------------------------------------------------------------
-// numeric safety
+// numeric safety & Helper
 // ------------------------------------------------------------------
 static inline double safeSqrt(double x) { return std::sqrt(x < 0.0 ? 0.0 : x); }
 static inline double clampExpArg(double x, double lo, double hi){ return (x<lo?lo:(x>hi?hi:x)); }
@@ -183,7 +183,7 @@ inline double LambdaBp2(double y, double pt) { return std::max(lambdaQCD*lambdaQ
 // For AB: uaMax = log(dymax(-y,pt)), ubMax = log(dymax(+y,pt))  (see below).
 inline double dymax(double y, double pt) {
     const double r = std::min(std::log(2.0), ymax(pt) - y);
-    return (r > 1e-12 ? r : 1e-12);
+    return (r > 1e-12 ? r : 1e-12);           // original guard
 }
 
 // ------------------------------------------------------------------
@@ -239,9 +239,10 @@ inline double f1(double pt) {
 inline double f2(double y, double pt) {
     if (std::fabs(y) >= ymax(pt)) return 1e-30;
     double arg = 1.0 - 2.0 * Mperp(pt) / rootsnn * std::cosh(y);
-    if (arg <= 0.0) arg = 1e-30;              // numeric safety (non-integer n)
+    if (arg <= 0.0) arg = 1e-30;              // original guard
     return std::pow(arg, n);
 }
+
 double dsigdyd2pt(double y, double pt) {
     if (std::fabs(y) > ymax(pt)) return 1e-30;
     return f1(pt) * f2(y, pt);
@@ -329,7 +330,7 @@ void pACrossSection(double y, double pt, double* res, double* err) {
     P.uaMax    = std::log(dymax( y, pt));                      
     // P.alphas_a = (alphas != 0 ? alphas : runningCoupling(dptA(y, pt)));
     // double mu_A = dptA(y, pt);
-    double mu_A = Mperp (pt);
+    double mu_A = std::max( Mperp(pt), 1.0 );
     P.alphas_a = (alphas != 0 ? alphas : runningCoupling(mu_A));
     if (P.uaMax < uMin) P.uaMax = uMin;
     
@@ -343,7 +344,6 @@ void pACrossSection(double y, double pt, double* res, double* err) {
         MINEVAL, maxeval, KEY, nullptr, nullptr, &nregions, &neval, &fail,
         &integral_result, &error, &prob
     );
-
     if (fail!=0 || !std::isfinite(integral_result)) std::cout << ">>>> Error (pA) or NaN! <<<<<\n";
     *res = (P.uaMax - uMin) * integral_result;
     *err = (P.uaMax - uMin) * error;
@@ -386,6 +386,7 @@ void ABCrossSection(double y, double pt, double* res, double* err) {
 
     *res = (p.ubMax - uMin) * (p.uaMax - uMin) * integral_result;
     *err = (p.ubMax - uMin) * (p.uaMax - uMin) * error;
+
     if (!std::isfinite(*res) || *res < 0.0) *res = 0.0;
 }
 

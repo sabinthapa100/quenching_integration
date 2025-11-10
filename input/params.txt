@@ -16,13 +16,13 @@ particleType   1
 
 // Strong coupling constant (Alpha_s)
 // if alphas = 0, then use 4-loop running with mu = dpt_A
-// at lambda QCD = 0.308, alpha_s(lambdaQCD) = 0.326; if alphas = 0, then it takes running coupling
-alphas    0.326   
+// at lambda QCD = 0.308, alpha_s(lambdaQCD) = 0.326; if alphas = 0, then it takes running coupling, 0.5 A&P
+alphas    0.5   
 
 // QCD scale (Lambda QCD) in GeV
 // this is used in running coupling and phat calculation
-//lambdaQCD 	0.25;
-lambdaQCD     0.308       
+lambdaQCD 	0.25
+// lambdaQCD     0.308       
 
 // Cold Nuclear Matter Transport coefficient qhat0 in GeV^2/fm;  (0.07-0.09)
 //Can have values: 0.051 and 0.075 at x = 10^-2 

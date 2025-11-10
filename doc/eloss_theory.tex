@@ -1,0 +1,806 @@
+\documentclass[11pt,onecolumn]{article}
+
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{-0.25in}
+\setlength{\textheight}{8in}
+\usepackage{color}
+\usepackage{graphicx} % Required for inserting images
+\newcommand{\redflag}[1]{{\color{red} #1}}
+\newcommand{\dd}{{\rm d}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bqa}{\begin{eqnarray}}
+\newcommand{\eqa}{\end{eqnarray}}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\DeclareMathOperator{\arccosh}{arccosh}
+\DeclareMathOperator{\arcsinh}{arcsinh}
+
+\title{Energy Loss and Transverse Momentum Broadening of Quarkonia in the Cold QCD/Nuclear Matter}
+\author{Sabin Thapa}
+% \date{Jan 24, 2024}
+\date{\today}
+%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%
+Before the hot nuclear matter (QGP) is formed in the high energy $pA$ collisions, the production of the quarkonia is initially modified due to the presence of the cold nuclei. The presence of the nuclear matter modifies the parton densities relative to the free nucleon. In addition to the nPDF effect, in the cold nuclear matter, the quarkonia states can also undergo multiple (elastic) scatterings in the cold nucleus prior to the hard collision, thereby exchanging a gluon with the cold nuclei, and this scattering induces radiation. As a result of multiple scattering in the nucleus before the hot medium is formed, the quarkonia states can lose energy due to medium-induced gluon bremsstrahlung. This medium-induced radiation spectrum is coherent. This coherent energy loss and the momentum broadening caused in the quarkonia states is different from the gluon radiation resummed in leading-twist parton distribution and fragmentation functions and should also be taken into account ~\cite{Arleo:2012rs,Liou:2014rha}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Energy Loss \& Transverse Momentum Broadening of Quarkonia}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The determination of the radiative energy loss of a high energy charged particle as it passes through matter is a problem studied some time ago, in QED, by Landau, Pomeranchuk and Migdal \cite{Baier:1996kr, Vitev:2007ve}
+
+
+
+I will follow \href{https://indico.cern.ch/event/327279/contributions/761838/attachments/1133255/1620606/arleo_vietnam.pdf}{talk!}
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kinematical details for pA Energy Loss}
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Kinematics}
+Following the notation of Arleo and Peigne \cite{Arleo:2012rs} we first consider the kinematics of a $pA$ collision in the nuclear rest frame where the proton momentum is given by $E_p$ and the nucleons  that make up the nucleus are assumed to be at rest (their momenta are indicated by subscript $N$ below).  We additionally assume that the collision energy encoded in the Mandelstam variable $s$ obeys $\sqrt{s} \gg m_p$, where $m_p$ is the mass of the proton.  We assume that the mass of the nucleons is also given by $m_p$.  In the nuclear rest frame this corresponds to assuming that $|{\bf p}| \gg m_p$ such that $E_p \simeq |{\bf p}|$.  In the proton-nucleon rest frame (RF) one has
+%
+\bqa
+p^\mu_p &=& (E_p,{\bf p}) \nonumber \\
+p^\mu_N &=& (m_p,{\bf 0}) \, .
+\eqa
+%
+Using this one has
+%
+\bqa
+s &=& (E_p + m_p,{\bf p})^2 \nonumber \\
+&=& (E_p + m_p)^2 - {\bf p}^2 \nonumber \\
+&=& \left(\sqrt{{\bf p}^2+m_p^2} + m_p^2\right)^2 - {\bf p}^2 \nonumber \\
+&=& 2 m_p^2 + 2 E_p m_p \, .
+\eqa
+%
+Solving for $E_p$ and using $s \gg m_p^2$, one obtains
+%
+\beq
+E_p \simeq \frac{s}{2 m_p} \, .
+\eeq
+
+Next we consider the situation in the proton-nucleon center of momentum frame (COM), which is indicated by a prime on the variables in this section.  In this frame one has
+%
+\bqa 
+p^{\mu\prime}_p &=& (E_p^\prime,{\bf p}^\prime) \nonumber \\
+p^{\mu\prime}_N &=& (E_p^\prime,-{\bf p}^\prime) \, .
+\eqa
+%
+As a result, one has 
+%
+\beq
+s = \left( p^{\mu\prime}_p + p^{\mu\prime}_N \right)^2 \, ,
+\eeq
+%
+such that
+%
+\beq
+E_p^\prime = \frac{\sqrt{s}}{2} \, .
+\eeq
+
+Next, we consider the Feynman variable $x_F$ of a produced quarkonium state which is defined in the COM frame as
+%
+\beq
+x_F \equiv \frac{p_{\psi\parallel}^\prime}{p_{p\parallel}^\prime} \, ,
+\eeq
+% 
+where $\psi$ indicates the quarkonium state.  Decomposing the time and longitudinal components of the $\psi$ momentum using
+%
+\bqa
+E_\psi^\prime &=& M_\perp \cosh y^\prime \nonumber \\
+p_{\psi\parallel}^\prime &=& M_\perp \sinh y^\prime \, ,
+\label{eq:psirapcom}
+\eqa
+%
+with $M_\perp = \sqrt{{p}_T^2 + M_\psi^2}$ and using $p_{p\parallel}^\prime \simeq E_p^\prime = \sqrt{s}/2$ one obtains
+%
+\beq
+x_F = \frac{2 M_\perp \sinh y^\prime}{\sqrt{s}} \, .
+\label{eq:xfres2}
+\eeq
+%
+Note also that Eq.~(\ref{eq:psirapcom}) can also be used to solve for the COM rapidity of the $\psi$, giving
+%
+\beq
+y^\prime = \frac{1}{2} \ln \left( \frac{E_\psi^\prime + p_{\psi\parallel}^\prime}{E_\psi^\prime - p_{\psi\parallel}^\prime} \right) .
+\eeq
+
+
+Next we express the rapidity in the COM frame in terms of the RF rapidity of the quarkonium state
+%
+\beq
+y = y^\prime + y_p^\prime \, ,
+\eeq
+%
+where $y_p^\prime$ is the proton rapidity in the COM frame, $y^\prime$ is the quarkonium rapidity in the COM frame, and $y$ is the total rapidity \href{https://web.physics.utah.edu/~jui/5110/hw/kin_rel.pdf}{[1]}.  The proton rapidity in the COM can be determined using $E_p^\prime = m_p \cosh y_p^\prime$ where we have used the fact that ${\bf p}_T = 0$.  This gives
+%
+\beq
+\cosh y_p^\prime = \frac{E_p^\prime}{m_p} = \frac{\sqrt{s}}{2m_p} \, ,
+\eeq
+%
+giving
+
+Next, we can express the energy of the $\psi$ in the RF using $E_\psi = M_\perp \cosh y =  M_\perp \cosh (y^\prime + y_p^\prime)$.  To derive equation (3.3) of \cite{Arleo:2012rs} we use this to express $E_\psi = E_\psi(x_F)$ as
+%
+\beq
+E_\psi = M_\perp \cosh\!\left( \arcsinh\!\left( \frac{\sqrt{s} \, x_F}{2 M_\perp}\right) + \arccosh\!\left( \frac{\sqrt{s}}{2m_p} \right) \right) .
+\eeq 
+%
+To proceed, we use the fact that $\cosh x = (e^x + e^{-x})/2$ and
+%
+\bqa
+\arcsinh z &=& \ln\!\left(z + \sqrt{1+z^2}\right) \, \nonumber \\
+\arccosh z &=& 2 \ln\!\left( \sqrt{\frac{z+1}{2}} + \sqrt{\frac{z-1}{2}} \right) .
+\eqa
+%
+Taking the limit $s \gg m_p$ ($z \gg 1$) the second relation leads to
+%
+\beq
+\arccosh\!\left( \frac{\sqrt{s}}{2m_p} \right) \simeq \ln\!\left( \frac{\sqrt{s}}{m_p} \right) .
+\eeq
+%
+Simplifying and again using $s \gg m_p$ we obtain
+%
+\beq
+E_\psi = E_\psi(x_F) = E_p \left[ \frac{x_F}{2} + \sqrt{ \left( \frac{x_F}{2} \right)^2 + \frac{M_\perp^2}{s} } \right] \, ,
+\eeq
+%
+which is independent of the partonic sub-processes. 
+
+Solving for $x_F$ from this relation, one obtains
+%
+\beq
+x_F = x_F(E) = \frac{E_\psi}{E_p} - \frac{E_p}{E_\psi} \frac{M_\perp^2}{s} \, .
+\eeq
+
+\subsubsection*{2 $\rightarrow$ 1 kinematics}
+
+Next we take a model where the $\psi$ is produced via $ 2 \rightarrow 1$ partonic subprocess, here gluon fusion.  (Note, this cannot occur by energy conservation and formally requires an additional radiation, but this is a model people use).  The gluons each have Bjorken $x$ of $x_1$ and $x_2$ in the COM frame, such that $E \equiv x_1 E_p$ \cite{Arleo:2014oha}.  As a result $p_{\parallel \, 1} = x_1 \frac{\sqrt{s}}{2}$ and $p_{\parallel \, 2} = -x_2 \frac{\sqrt{s}}{2}$.  
+
+By momentum conservation then
+%
+\bqa
+&& p_{\parallel \psi}^\prime = (x_1 - x_2) \frac{\sqrt{s}}{2} \, , \nonumber \\ i.e, && \frac{p_{\parallel \psi}^\prime}{E_p^\prime} \simeq \frac{p_{\parallel \psi}^\prime}{p_{\parallel p}^\prime} = x_F = x_1 - x_2 \, .
+\eqa
+
+Note that expanding Eq.~(\ref{eq:xfres2}) we obtain
+%
+\bqa
+&& x_F = \frac{2 M_\perp (e^{y^\prime}- e^{-y^\prime})}{ 2 \sqrt{s}} \, , \, \quad \text{such that} \, \nonumber \\
+&& x_1 = \frac{M_\perp}{\sqrt{s}} e^{y^\prime} \, , \nonumber \\
+&& x_2 = \frac{M_\perp}{\sqrt{s}} e^{- y^\prime} \, .
+\label{eq:xyeq}
+\eqa
+Here, we can also get $x_1 x_2 = M_\perp^2/s$.
+Now, we can introduce a new variable $\tilde{x}_F$ defined as
+%
+\beq
+\tilde{x}_F = x_1 + x_2 = \frac{2 M_\perp}{\sqrt{s}} \cosh y^\prime \, ,
+\eeq
+%
+From equation \eqref{eq:xfres2}, we get $\sinh y^\prime = (x_F \sqrt{s})/(2M_\perp)$, and so $\cosh y^\prime = \sqrt{1+\sinh^2y^\prime} = \sqrt{1+ (x_F^2 s)/(4M_\perp^2)}$.
+%
+We can further simplify $\tilde{x}_F$ as
+\bqa
+\tilde{x}_F = \tilde{x}_F(E_\psi) &=&  \frac{2 M_\perp}{\sqrt{s}} \cosh y^\prime \nonumber \, , \\
+ &=&  \frac{2 M_\perp}{\sqrt{s}} \sqrt{1+\sinh^2 y^\prime} \, , \nonumber \\
+&=& \sqrt{x_F^2 + 4 M_\perp^2/s} \, , \\
+&=& \sqrt{\left(\frac{E_\psi}{E_p} - \frac{E_p}{E_\psi} \frac{M_\perp^2}{s}\right)^2 + \frac{4 M_\perp^2}{s}}  \, , \nonumber \\
+&=& \sqrt{\left(\frac{E_\psi}{E_p}\right)^2 + \left(\frac{E_p}{E_\psi}\frac{M_\perp^2}{s}\right)^2 - 2 \left(\frac{E_\psi}{E_p}\right) \left(\frac{E_p}{E_\psi} \frac{M_\perp^2}{s}\right) + \frac{4 M_\perp^2}{s}} \, , \nonumber \\
+&=& \sqrt{\left(\frac{E_\psi}{E_p} + \frac{E_p}{E_\psi} \frac{M_\perp^2}{s}\right)^2}  \, , \nonumber \\
+&=& \frac{E_\psi}{E_p} + \frac{E_p}{E_\psi} \frac{M_\perp^2}{s} \, ,
+\eqa
+%
+and
+%
+\beq
+\frac{\partial x_F}{\partial E_\psi} = \frac{\tilde{x}_F}{E_\psi} \, .
+\label{eq:xfd}
+\eeq
+
+\subsubsection{$x_F$-differential energy loss }
+
+The energy loss model formula is
+%
+\beq
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd E}\left(E, \sqrt{s} \right)  = \int_0^{\varepsilon_{\rm max}} \dd \varepsilon \,{\cal P}(\varepsilon, E, \ell^2) \, \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd E} \left( E+\varepsilon, \sqrt{s}\right) ,
+\eeq
+%
+where $E$ is understood to be the quarkonium energy $E_\psi$ and $\varepsilon$ is the quarkonium energy loss experienced by the state as it propagates through the nucleus in the RF. The variable $\ell$ is the transverse momentum broadening acquired during propagation through the nucleus.  The function $\cal P$ is called the quenching weight and is the probability density for the energy loss distribution as function of the radiated energy and the final energy of the radiating particle.  The upper limit on the integral is given by $\varepsilon_{\rm max} = {\rm min}(E_p-E,E)$ \cite{Arleo:2012rs}.
+
+Using the chain rule one has
+%
+\beq
+\frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd x_F} \left( x_F(E), \sqrt{s}\right) \frac{\dd x_F(E) }{\dd E}  = \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd x_F} \left( x_F(E+\varepsilon), \sqrt{s}\right) \frac{\dd x_F(E+\varepsilon) }{\dd (E + \varepsilon)} 
+\eeq
+%
+On the left-hand side we use Eq.~(\ref{eq:xfd}) and on the right-hand side we use
+%
+\beq
+\frac{\partial x_F(E+\varepsilon)}{\partial (E+\varepsilon)} = \frac{\tilde{x}_F(E+\varepsilon)}{(E+\varepsilon)} \, .
+\eeq
+%
+Simplifying, we obtain
+%
+\beq
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd x_F}\left(x_F(E), \sqrt{s} \right)  = \int_0^{\varepsilon_{\rm max}} \dd \varepsilon \,{\cal P}(\varepsilon, E, \ell^2) \, \left[ \frac{E \, \tilde{x}_F(E+\varepsilon)}{(E+\varepsilon) \, \tilde{x}_F(E) } \right] \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd x_F} \left( x_F(E+\varepsilon), \sqrt{s}\right) .
+\eeq
+
+\subsubsection{$y$-differential energy loss}
+
+{\color{red} Add note that $y$ and other quantities are now in the COM frame.}
+
+It is more transparent to express this in terms of the COM quarkonium rapidity and the rapidity shift that results from the energy loss of the quarkonium state.  In addition the resulting integration is more straightforward to implement. In our model where the $\psi$ is produced via $ 2 \rightarrow 1$ partonic subprocess, the gluons each have Bjorken $x$ of $x_1$ and $x_2$ in the COM frame, such that $E = x_1 E_p$ \cite{Arleo:2012rs}. Using $ x_1 = (M_\perp/\sqrt{s}) e^y$ from \eqref{eq:xyeq}, we can get
+%
+\beq
+E = E_p \frac{M_\perp}{\sqrt{s}} e^y \, ,  
+\eeq
+%
+or equivalently
+%
+\bqa
+&& y(E) = \ln\left( \frac{E \sqrt{s}}{E_p \, M_\perp} \right) \, , \nonumber \\
+&& \frac{dy(E)}{dE} = \frac{1}{E} \, .
+\label{eq:dydE}
+\eqa
+%
+Using the chain rule, 
+%
+\beq
+\frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y} \left( y(E), \sqrt{s}\right) \frac{\dd y(E) }{\dd E}  = \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y} \left( y(E+\varepsilon), \sqrt{s}\right) \frac{\dd y(E+\varepsilon) }{\dd (E + \varepsilon)} \, ,
+\eeq
+%
+where on the left-hand side we use Eq.~(\eqref{eq:dydE}) and on the right-hand side we use
+%
+\beq
+\frac{\partial y(E+\varepsilon)}{\partial (E+\varepsilon)} = \frac{1}{E+\varepsilon} \, .
+\eeq
+%
+Simplifying and making a change of variables in a similar manner using $ \dd E = y(E) \, \dd E$,
+%
+one obtains a simpler formulation of the energy-loss integral \cite{Arleo:2013zua}
+%
+\beq
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd y}\left(y, \sqrt{s} \right)  = \int_0^{\varepsilon_{\rm max}(y)} \dd \varepsilon \,{\cal P}(\varepsilon, E(y), \ell^2) \, \left[ \frac{E(y)}{E(y)+\varepsilon} \right] \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd E} \left( y(E+\varepsilon), \sqrt{s}\right) .
+\label{eq:dcs_y}
+\eeq
+%
+From here it is convenient to express the integral over the energy loss in terms of the rapidity shift using
+%
+\beq
+E(y) + \varepsilon \equiv E(y + \delta y) = E(y) e^{\delta y} \, ,
+\eeq
+%
+which results in
+%
+\bqa
+\frac{\varepsilon}{E} &=& e^{\delta y} - 1 \, , \nonumber \\
+\delta y &=& \ln\left(1 + \frac{\varepsilon}{E(y)} \right) .
+\label{eq:elossratio}
+\eqa
+%
+After changing the integration to $\delta y$, the energy-loss integral takes the form
+%
+\beq
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd y}\left(y, \sqrt{s} \right)  = \int_0^{\delta y_{\rm max}(y)} \dd \delta y \,\hat{\cal P}(e^{\delta y} - 1, \ell^2) \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y} \left( y + \delta y, \sqrt{s}\right) ,
+\eeq
+%
+with $\delta y_{\rm max} = {\rm min}(\ln 2,y_{\rm max}-y)$ and $y_{\rm max} = \ln(\sqrt{s}/M_\perp)$, which is the maximum quarkonium rapidity in the proton-nucleon COM frame.  Finally, we have used the fact that the quenching weights are a scaling function obeying $E \, {\cal P}(\varepsilon,E, \ell^2) = \hat{\cal P}(\varepsilon/E, \ell^2)$.  This can be shown using the results collected in the next section.
+
+\subsubsection{$p_T$-differential energy loss}
+
+Taking transverse momentum broadening (shift in $p_T$) $\delta p_T$ into account for the energy loss $\varepsilon$, we can rewrite Eq.~\eqref{eq:dcs_y} for the quarkonium double differential cross section in p-A collision in terms of that in p-p collision using 
+%
+\beq
+y = \ln\left( \frac{E \sqrt{s}}{E_p \, M_\perp} \right) \, , \nonumber \\
+\label{eq:dydE2}
+\eeq
+%
+as \cite{Arleo:2013zua},
+%
+%
+\beq
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd y \, \dd^2 p_T}\left(y, p_T \right)  = \int_{0}^{2\pi} \frac{\dd \varphi}{2\pi} \int_0^{\varepsilon_{\rm max}(y)} \dd \varepsilon \,{\cal P}(\varepsilon, E(y), \ell^2) \, \left[ \frac{E(y)}{E(y)+\varepsilon} \right] \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y \, \dd^2 p_T} \left( y(E+\varepsilon), | \vec{p}_T - \delta \vec{p}_T | \right) .
+\label{eq:dcs_ypt2}
+\eeq
+%
+{\color{red}
+Above the integral over the azimuthal angle is the integral over the azimuthal angle $\varphi$ of $\delta \vec{p}_T$, which is assumed to be uniformly distributed in the transvese plane.  In this case, one can take the transverse momentum $\vec{p}_T$ along the $x$-axis by choice of the coordinate system, such that $\vec{p}_T = (p_T,0)$ and $\delta \vec{p}_T = \delta p_T (\cos\varphi,\sin\varphi)$, giving $| \vec{p}_T - \delta \vec{p}_T | = \sqrt{(p_T - \cos\varphi \, \delta p_T)^2 + (\sin\varphi \, \delta p_T)^2}$.
+}
+Similarly, in terms of the rapidity shift $\delta y$ and transverse momentum shift $\delta p_T$, one obtains
+%
+\beq
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd y \, \dd^2 p_T}\left(y, p_T \right)  = \int_{0}^{2\pi} \frac{\dd \varphi}{2\pi} \int_0^{\delta y_{\rm max}(y)} \dd \delta y \,\hat{\cal P}(e^{\delta y} - 1, \ell^2) \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y \, \dd^2 p_T} \left( y + \delta y, | \vec{p}_T - \delta \vec{p}_T | \right) ,
+\label{eq:dcs_ypt2_2}
+\eeq
+%
+with $\delta y_{\rm max} = \text{min}(\ln 2, y_{\rm max}-y)$ and $y_{\rm max} = \ln(\sqrt{s}/M_\perp)$, the maximum quarkonium rapidity in the proton-nucleon COM frame. 
+
+%Equivalently,
+%
+%\beq
+%\frac{1}{A}\frac{\dd\sigma_{\mathrm{pA}}^{\psi}}{\dd y \, \dd p_T}\left(y, p_T \right)  = \int_0^{\delta y_{\rm max}(y)} \dd \delta y \,\hat{\cal P}(e^{\delta y} - 1, \ell^2) \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y \, \dd  p_T} \left( y + \delta y, p_T - \delta p_T \right) .
+%\label{eq:dcs_ypt2_3}
+%\eeq
+
+\subsection{The coherent energy loss quenching weight for $pA$}
+%
+Quarkonium states can also undergo an elastic scattering, thereby exchanging a gluon with cold nuclear matter
+or the nuclear target, and this scattering can induce radiation. The medium-induced radiation spectrum caused
+by the gluon radiation is coherent. This coherent energy loss is different from the gluon radiation resummed in leading-twist parton distribution and fragmentation functions and should also be considered \cite{Arleo:2012rs, Liou:2014rha}.
+The quenching weight ${\cal P}$ can be obtained from the radiation spectrum ${\dd I}/{\dd \varepsilon}$.  Here we include the dependence on the transverse momentum broadening $\ell$.  The fully coherent energy loss result is~\cite{Arleo:2012rs}
+%
+\beq
+\label{relation-P-spec}
+{\cal P}(\varepsilon, E, \ell^2) = \frac{\dd I}{\dd\varepsilon} \, \exp \left\{ - \int_{\varepsilon}^{\infty} \dd\omega  \frac{\dd{I}}{\dd\omega} \right\} = \frac{\partial}{\partial \varepsilon} \, \exp \left\{ - \int_{\varepsilon}^{\infty} \dd\omega  \frac{\dd{I}}{\dd\omega} \right\} \, .
+\eeq
+%
+The medium-induced radiation spectrum is
+%
+\beq
+\label{eq:spectrum-def}
+\frac{\dd I}{\dd \varepsilon} = \frac{N_c \alpha_s}{\pi \varepsilon} \left\{ \ln{\left(1+\frac{\ell^2 E^2}{M_\perp^2 \varepsilon^2}\right)} - \ln{\left(1+\frac{\Lambda_{\rm p}^2 E^2}{M_\perp^2 \varepsilon^2}\right)} \right\} \, \Theta(\ell^2 - \Lambda_{\rm p}^2) \, ,
+\eeq
+%
+where $\ell = \sqrt{\hat{q} L^A_{eff}}$ is the transverse momentum broadening acquired by the quarkonium $\psi$ while crossing the nucleus, $L^A_{eff}$ is the effective path length across the target nucleus $A$ ($L^{p}_{eff} = 1.5 \, \text{fm} \, , \, L^{Pb}_{eff} = 10.11 \, \text{fm}$ for Pb nucleus), $\hat{q}$ is the transport coefficient,  and $\Lambda_{\mathrm p}^2 = {\rm max}(\Lambda_{_\mathrm{QCD}}^2,\ell_{\rm p}^2)$. 
+
+From the above expression one can prove that that $E\,{\cal P}(\varepsilon,E,\ell^2)$ is a scaling function of $f = e^{\delta y} - 1 \equiv \varepsilon/E$ and $\ell_A^2$.  This allows one to introduce a scaled function $\hat{\cal P}$ defined as
+%
+\beq
+\label{Phat-def}
+\hat{\cal P}(f,\ell^2) \equiv E\,{\cal P}(\varepsilon,E,\ell^2) \, .
+\eeq
+%
+Following Ref.~\cite{Arleo:2013zua}, $\hat{\cal P}$ can be expressed in terms of the dilogarithm function ${\rm Li}_2$ as
+%
+\beq
+\hat{\cal P}(f,\ell^2) =  \frac{\partial}{\partial f} \, \exp \left\{\frac{N_c \alpha_s}{2 \pi} \left[ {\rm Li}_2\left(\frac{-\ell^2}{f^2 M_\perp^2} \right) - {\rm Li}_2\left(\frac{-\Lambda_{\rm p}^2}{f^2 M_\perp^2} \right) \right] \right\} \, .
+\label{eq:quenching-dilog}
+\eeq 
+%
+That is,
+%
+\bqa
+\hat{\cal P}(f,\ell_A^2) &=&  \frac{\partial}{\partial f} \, \exp \left\{\frac{N_c \alpha_s}{2 \pi} \left[ {\rm Li}_2\!\left(\frac{-\ell_A^2}{f^2 m_{T,\Upsilon}^2} \right) - {\rm Li}_2\!\left(\frac{-\Lambda_{p}^2}{f^2 m_{T,\Upsilon}^2} \right) \right] \right\} . \;\;\;\;\;
+\label{eq:quenching-dilog1}
+\eqa
+%
+%%%%%%%%%%%%%%%%
+\subsection{Fixing the parameters entering into the quenching weight}
+%%%%%%%%%%%%%%
+We will take $N_c = 3$ and, to start, follow Arleo and Peigne \cite{Arleo:2012rs} taking $\alpha_s = 0.5$, $\Lambda_{\rm QCD} = 0.25$ GeV, $p_T = 1$ GeV, and $M = M_\Upsilon = 9$ GeV.
+
+The transverse momentum broadening is given in terms of the transport coefficient $\hat{q}$ times the path length tranversed through the target nucleus
+%
+\beq
+\ell^2 = \hat{q} L_A \, .
+\label{eq:L_A}
+\eeq
+
+
+We will assume the following result which comes from fits to HERA data \cite{Golec-Biernat:1998zce}
+%
+\bqa
+&& \hat{q} = \hat{q}_0 \left( \frac{10^{-2}}{x_A} \right)^{0.3} \frac{\rho}{\rho_0} \, , \nonumber \\
+&& x_A = {\rm min}(x_0,x_2) \, \nonumber \\
+&& x_{0} = 1/(2 m_p L_A) \, \nonumber \\
+&& x_2 = \frac{M_\perp}{\sqrt{s}} e^{-y} 
+\label{eq:eqs}
+\eqa
+%
+where $\rho = \rho_{\rm HS} = 1/(4 \pi r_0^3/3) \simeq 0.17 \; {\rm fm}^{-3}$ is the nucleon number density for all nuclei, where HS stands for ``hard sphere'' approximation.  Following Arleo and Peigne, in principle, arbitrary number $\rho_0$ is taken to be $\rho_0 = \rho_{\rm HS}$ so that the density ratio appearing above is simply unity.  The remaining parameter $\hat{q}_0 = \hat{q}(x=10^{-2},\rho=\rho_{\rm HS})$ is fixed to data.  The value used by Arleo and Peigne \cite{Arleo:2012rs} was
+%
+\beq
+\hat{q}_0 = 0.075 \; {\rm GeV}^2/{\rm fm} \, .
+\eeq
+
+Finally, we need estimates of the path length traversed in various cases.  From table 3 of Ref.~\cite{Arleo:2012rs} the values obtained are based on computing the scaled number of nucleons participating in the momentum broadening/energy loss.  For a proton they use
+%
+\beq
+L_{\rm eff}^{\rm p} = 1.5 \; {\rm fm} \, ,
+\eeq
+%
+and for Pb 
+%
+\beq
+L_{\rm eff}^{\rm Pb} = 10.11 \; {\rm fm} \, .
+\eeq
+%
+Note that in practice these numbers will depend slightly on the collision energy through the dependence of the inelastic nucleon-nucleon scattering cross-section on $\sqrt{s}$.
+%%
+\subsection{Transverse Momentum Broadening}
+The transverse momentum broadening in p-A with respect to p-B collisions is given by
+%
+\beq
+\delta p_T^2 = l^2_A - l^2_B \, .
+\label{eq:dpt}
+\eeq
+%
+Thus, with respect to the p-p collision, the transverse momentum broadening in p-A is
+%
+\beq
+\delta p_T = \sqrt{l^2_A - l^2_p} \, ,
+\eeq
+%
+where $l_A$ and $l_p$ are the the transverse momentum broadening of A nucleus and proton, respectively.
+
+\subsection{Parametrization of the p-p cross section}
+The double differential cross section of the prompt Quarkonia $\psi$ production can be parametrized as
+%
+\beq
+\frac{\dd \sigma^{\psi}_{pp}}{\dd y \, d^2 p_T} = \mathcal{N} \times \left( \frac{p_0^2}{p_0^2 + p_T^2} \right)^m \times \left( 1- \frac{2M_\perp}{\sqrt{s}} \cosh y \right)^n \equiv \mathcal{N} \times \mathcal{F}_1(p_T) \times \mathcal{F}_2(y,p_T) \, ,
+\label{eq:pp_cs}
+\eeq
+%
+such that
+%
+\beq
+ \mathcal{F}_1(p_T) = \left( \frac{p_0^2}{p_0^2 + p_T^2} \right)^m \, , \quad \text{and}
+ \quad \mathcal{F}_2(y,p_T) = \left( 1- \frac{2M_\perp}{\sqrt{s}} \cosh y \right)^n \, .
+\eeq
+%
+Here, $M_\perp = \sqrt{{p}_T^2 + M_\psi^2}$, and $\mathcal{N}$ is irrelevant as as we consider only the cross section ratios, the other constants are $p_0 = 6.6 \, GeV$, $ n = 13.8 $ and $m = 2.8$ for the $\Upsilon$ Quarkonium at $\sqrt{s}$ are obtained from a global fit of the available data \cite{Arleo:2013zua}. 
+
+\subsection{Approximation for $\mathcal{R}^\psi_{pA} (y,p_T)$}
+The heavy-quarkonium nuclear suppression in minimum bias p-A collisions as compared to p-p collisions can be represented in terms of the ratio
+%
+\beq
+\mathcal{R}^\psi_{pA} (y, p_T) = \frac{1}{A} \frac{\dd \sigma^\psi_{pA}}{dy \, d^2p_T} / \frac{\dd \sigma^\psi_{pp}}{dy \, d^2p_T} \, .
+\eeq
+%
+Using equation \eqref{eq:dcs_ypt2} and \eqref{eq:pp_cs} in above equation, we obtain
+%
+\beq
+\mathcal{R}^\psi_{pA} (y, p_T) =  \int_{0}^{2\pi} \frac{\dd \varphi}{2\pi} \int_0^{\delta y_{\rm max}(y)} \dd \delta y \,\hat{\cal P}(e^{\delta y} - 1, \ell^2) \frac{\mathcal{F}_1(| \vec{p}_T - \delta \vec{p}_T |)}{\mathcal{F}_1(p_T)} \frac{\mathcal{F}_2(y+\delta y, | \vec{p}_T - \delta \vec{p}_T |)}{\mathcal{F}_2(y,p_T)} \, ,
+\eeq
+%
+which on rearranging the parametric functions and integrals yields
+\beq
+\mathcal{R}^\psi_{pA} (y, p_T) =  \int_0^{\delta y_{\rm max}(y)} \dd \delta y \,\hat{\cal P}(e^{\delta y} - 1, \ell^2)  \frac{\mathcal{F}_2(y+\delta y, p_T)}{\mathcal{F}_2(y, p_T)}  \int_{0}^{2\pi} \frac{\dd \varphi}{2\pi}  \frac{\mathcal{F}_1(| \vec{p}_T - \delta \vec{p}_T |)}{\mathcal{F}_1(p_T)}  \frac{\mathcal{F}_2(y+\delta y, | \vec{p}_T - \delta \vec{p}_T |)}{\mathcal{F}_2(y+\delta y, p_T)} 
+\label{eq:raa_vs_y_pt2}
+\eeq
+%
+Since $\hat{\cal P}(e^{\delta y} - 1, \ell^2)$ is peaked at small values of $\varepsilon$ or $\delta y$, we neglect $\delta y$ in the later integral, in this approximation the $\varphi$ and $\delta y$ integrals factorize as
+%
+\beq
+\mathcal{R}^{\psi}_{pA} (y, p_T) \simeq \mathcal{R}^{loss}_{pA} (y, p_T) . \mathcal{R}^{broad}_{pA} (y, p_T) \, , 
+\eeq
+%
+where
+%
+\bqa
+&& \mathcal{R}^{loss}_{pA} (y, p_T) \equiv \int_0^{\delta y_{\rm max}(y)} \dd \delta y \,\hat{\cal P}(e^{\delta y} - 1, \ell^2)  \frac{\mathcal{F}_2(y+\delta y, p_T)}{\mathcal{F}_2(y, p_T)} \, , \\
+&& \mathcal{R}^{broad}_{pA} (y, p_T) \equiv \int_{0}^{2\pi} \frac{\dd \varphi}{2\pi}  \frac{\mathcal{F}_1(| \vec{p}_T - \delta \vec{p}_T |)}{\mathcal{F}_1(p_T)}  \frac{\mathcal{F}_2(y, | \vec{p}_T - \delta \vec{p}_T |)}{\mathcal{F}_2(y, p_T)} \, .
+\eqa
+%
+Here, the factor $\mathcal{R}^{loss}_{pA} (y, p_T) $ describes the effect of the energy loss on the nuclear modification only obtained by setting $\delta p_T = 0$, and $\mathcal{R}^{broad}_{pA} (y, p_T)$ describes the effect due to the transverse momentum broadening only as seen by setting $\hat{\cal P}(\varepsilon, E) = \delta (\varepsilon) $.
+
+%%%%
+\subsection{Centrality dependence}
+%
+Since the effective path length $L_A$ fully determines all the essential quantities as in equations \eqref{eq:L_A}, \eqref{eq:eqs}, \eqref{eq:dpt}, we can generalize the model discussed in previous sections to the case of the p-A collision at a given centrality by using effective length $L_A$ corresponding to that centrality.
+Since the effective path length $L_A$ fully determines all the key quantities (nuclear momentum broadening ($l_A$), transport coefficient ($\hat{q}$), and the transverse momentum broadening ($\delta p_T$)) of the energy loss and momentum broadening model discussed above, this is the only modification we are required to estimate in different centrality classes. We make use of the optical Glauber model to calculate the effective path length $L_A$ in the target nucleus $A$ at an impact parameter $\textbf{b}$ corresponding to a centrality class $[N_1,N_2]$.
+
+In the Glauber model, at an impact parameter $\bf b$, the number of participating nucleons $N_p$ in the target nucleus follows a binomial distribution,
+%%%
+\beq
+P(N_p) = \frac{\int d \textbf{b} \binom{A}{N_p} [p_{pA}]^{N_p} \{ 1-[1-p_{pA}(\textbf{b})]^{A-N_p}\}}{\int d \textbf{b} \{ 1-[1-p_{pA}(\textbf{b})]^A\}} \, ,
+\label{eq:binom}
+\eeq
+%
+where $p_{pA} \sigma_{\rm in}^{NN} T_A(\textbf{b})$ is the probability for an inelastic collision between the projectile proton and a nucleon of the target nucleus $A$, and $\sigma_{\rm in}^{NN}$ is the inelastic $p-p$ cross section which is 67.6 mb for 5.02 TeV and 71 for 8.16 TeV. The denominator of the equation \eqref{eq:binom} is the $p+A$ total inelastic cross section $\sigma^{pA}_{\rm in}$, and it ensures the correct normalization $P(N_p>0)=1$ for the total interaction probability. The number of binary collisions coincides with the number of participating nucleons of the target.
+
+In  the $p-$A collisions at LHC energy, as given in the appendix B of \cite{Arleo:2013zua}, the centrality dependent effective path length is,
+%%%
+\beq
+\resizebox{.8\hsize}{!}{$
+L_A = L_p + \frac{\sum\limits_{N=N_1}^{N_2} N(N-1) \int d\textbf{b} \binom{A}{N} [p_{pA}(\textbf{b})]^{N} [1-p_{pA}(\textbf{b})]^{A-N} }{\sigma^{\text{NN}}_{\text{in}} \rho_0 \sum\limits_{N=N_1}^{N_2} N \int d\textbf{b} \binom{A}{N} [p_{pA}(\textbf{b})]^{N} [1-p_{pA}(\textbf{b})]^{A-N}} \, ,
+\label{eq:LeffLHC}
+$}
+\eeq
+%
+where, $\rho_0 = 0.17 \, \text{fm}^{-3}$ is the central nuclear density, $L_p = 1.5$ fm is the corresponding length in a proton target, and $p_{pA} (\textbf{b}) = \sigma^{\text{NN}}_{\text{in}} T_A(\textbf{b})$ being the probability for an inelastic collision between the projectile and a nucleon of the target nucleus with the inelastic nucleon-nucleon scattering cross section  ($\sigma^{\text{NN}}_{\text{in}}$) $67.6 $ mb at 5.023 TeV and $71$ mb at 8.16 TeV.
+
+Also, for the $d-$Au collision at RHIC energy (200 GeV), the nucleon-nucleon inelastic cross section value is $\sigma^{\text{NN}}_{\text{in}} = 40$ mb, and the corresponding effective path length can be written as,
+%%%
+\beq
+\resizebox{.9\hsize}{!}{$
+L_A = L_p + \frac{\sum\limits_{N=N_1}^{N_2} N(N-1) \int d\textbf{b} \int d\textbf{r} P_d(\textbf{r}) \binom{A}{N} [T_A(\textbf{b})]^2 [p_{dA}(\textbf{b},\textbf{r})]^{N-2} [1-p_{dA}(\textbf{b},\textbf{r})]^{A-N} }{\rho_0 \sum\limits_{N=N_1}^{N_2} N \int d\textbf{b} \int d\textbf{r} P_d(\textbf{r}) \binom{A}{N} T_A(\textbf{b}) [p_{dA}(\textbf{b},\textbf{r})]^{N-1} [1-p_{dA}(\textbf{b},\textbf{r})]^{A-N}} \, ,
+$}
+\label{eq:LeffRhic}
+\eeq
+%
+where 
+%
+\beq
+\Phi_d(\textbf{r}_{pn}) = \frac{1}{\sqrt{2\pi}} \frac{\sqrt{ab (a+b)}}{b-a}  \frac{e^{-ar_{pn}}-e^{-br_{pn}}}{r_{pn}} \, ,
+\label{eq:deuteriumWF}
+\eeq
+%
+is the wave function for the \href{https://www.bnl.gov/userscenter/thesis/past-competitions/2022/thesis/thesis_niveditha_ramasubramanian.pdf}{deuterium nucleus} given by Hulth\'en form \cite{Miller:2007ri, 2021APS..DNP.QH004R} in terms of the transverse separation $\textbf{r}_{pn}$ between p-n in deuterium with parameters $a = 0.228 \, \text{fm}^{-1}$ and $b = 1.18 \, \text{fm}^{-1}$ \cite{PHENIX:2003qdw}. We can get the nuclear distribution function as,
+%
+\beq
+\rho_d(r_{pn}) = 4\pi r_{pn}^2 \Phi_d^2(r_{pn}) = 4 \pi r_{pn}^2 \rho_{d0}\left( \frac{e^{-ar_{pn}}-e^{-br_{pn}}}{r_{pn}} \right)^2 \, ,
+\label{eq:deuteronDensity}
+\eeq
+%
+where $\rho_{d0} = \left( \frac{\sqrt{ab (a+b)}}{b-a} \right)^2$ is the normalization constant (\redflag{or that is calculated by this normalization condition $\int d^3 \textbf{r}_{pn} |\Phi(r_{pn}|^2 = 1 $}), and assuming the equal masses of neutron and proton, $r = r_{pn}/2$ is the distance from the center of mass of the deuteron. The another quantity in the equation \eqref{eq:LeffRhic} $p_{dA}(\textbf{b},\textbf{r})$ is the interaction probability of the a nucleon with either nucleon of the deuterium projectile given as,
+%
+\beq
+p_{dA}(\textbf{b},\textbf{r}) = \sigma^{\text{NN}}_{\text{in}} T_A(\textbf{b}+\frac{\textbf{r}}{2}) + \sigma^{\text{NN}}_{\text{in}} T_A(\textbf{b}-\frac{\textbf{r}}{2}) - p_2(\textbf{b},\textbf{r}) \, ,
+\eeq
+%
+with the nuclear thickness function for the nucleus $A$ given by $T_A(\textbf{b}) = \int d z \rho(\textbf{r})$ with $\rho(r)$ being Woods-Saxon profile given as,
+%%%
+
+\beq
+\rho_A(r) = \frac{\rho_0}{1+e^{\frac{(r-R_A)}{d}}} \, ,
+\label{eq:woodsaxon}
+\eeq 
+%%
+.
+
+Also, the additional quantity $p_2(\textbf{b},\textbf{r})$ is the collision probability of a target nucleon with both nucleons of the deuterium projectile written as,
+%
+\bqa
+p_{2}(\textbf{b},\textbf{r}) &&= \int d\textbf{s} T_A(\textbf{s}) p(\textbf{b}+\textbf{r}/2-\textbf{s}) p(\textbf{b}-\textbf{r}/2-\textbf{s}) \nonumber \\
+&& \simeq T_A(\textbf{b}) \int d\textbf{s} p(\textbf{r}+\textbf{s}) p(\textbf{s}) \, ,
+\eqa
+%
+where $p(\textbf{b} = 1 - \text{exp}(-2 N e^{-\textbf{b}^2/\alpha})$ is the Regge-inspired parametrization of the inelastic nucleon-nucleon collision probability as a function of impact parameter at 200 GeV, with $\alpha = 1.05 \, \text{fm}^2$ and $N = 1.1$, giving the total p-p inelastic cross section $\sigma^{\text{NN}}_{\text{in}} = \int d\textbf{s}p(\textbf{s}) = 4.2 \, \text{fm}^2 = 42 \, \text{mb}$ \cite{Arleo:2013zua}.
+
+From these equations, we can recover the case of minimum bias. For the minimum bias case, $N_1 = 1$ and $N_2 = A$, and we obtain the equation (15) of Ref. \cite{Strickland:2024oat}, yielding $L_A = 10.41$ fm at LHC energies. We can have four centrality class at LHC energy: class 1, class 2, class 3 and class 4 with different $L_{Pb}$ values (and other parameters based on the Table 2 of \cite{Arleo:2013zua}). For detailed about different centrality classes and corresponding values, refer to table 2 of \cite{Arleo:2013zua}. The centrality dependence is estimated using Optical Glauber Model as explained below.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Glauber Model for p-A}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We make use of optical Glauber model for the pA collision as shown in figure \ref{fig:pa-geometry}. This is based on the continuous nucleon density distribution. That is the local density fluctuations and correlations are ignored so that each nucleon in the projectile interacts with the incoming target as a flux tube described with a smooth density. Also, the optical limit assumes that the scattering amplitudes can be described by an eikonal approach, where the incoming nucleons see the target as a smooth density. The Glauber model depends on the nucleon-nucleon inelastic scattering cross section $\sigma^{NN}_{\text{inel}} = 62$ mb for $pp$ at 5TeV. The smooth nuclear density is given by Woods-Saxon Distribution for a nucleus $A$ as,
+%
+\beq
+\rho_A(r) = \frac{\rho_0}{1+ e^{(r-R)/d}} \, ,
+\eeq
+%
+where $A = 208$ for Pb nucleus, $\rho_0 = 0.17$ $\text{fm}^3$ is the nucleon density at the center of the nucleus $A$, $d = 0.54$ fm is the skin-depth (thickness of the nucleus), and $R = 1.12 \times A^{1/3} - 0.86 \times A^{-1/3}$ is the radius of the nucleus A in fm (for A = 208, $R$ = 6.49 fm). This quantity gives the probability per unit volume, normalized to unity, for finding the nucleon at location $(\vec{s}, z_A)$This nuclear density can be used to calculate the nuclear thickness function, which describes the transverse nucleon density, and can be calculated by integrating the nuclear density along the longitudinal direction $z$ as,
+%
+\beq
+T_A(\vec{s}) = \int \rho_A(\vec{s}, z_A) dz_A \, ,
+\eeq
+%
+which gives the probability per unit transverse area of a given nucleon being located in the target flux tube.
+
+
+
+For the proton, the nuclear thickness function is parameterized as \cite{dEnterria:2020dwq},
+%%%%%%%
+\beq
+T_p(r) = \frac{m}{2 \pi R_p^2 \Gamma(2/m)} e^{-(\frac{r}{R_p})^m} \, 
+\eeq
+%%%%%%%%
+where, $r$ is the radius, exponent $m = 1.85$ determines the shape (close to 2 gives Gaussian and close to 1 give peaked exponential-like distribution), $\Gamma$ is the gamma-function, and $R_p = 0.975 $ fm is the radius of the proton. 
+
+
+Now, the product $T_A(\vec{s}) T_p(\vec{s}-\vec{b}) d^2s$ gives the joint probability per unit area of nucleons being located in the respective overlapping target and projectile flux tubes of the differential area $d^2s$. Integrating this product over all the values of $\textbf{s}$ gives the "thickness function" as,
+%%%%%%%
+\beq
+T_{pA}(b) = \int T_A(\vec{s}) T_p(\vec{s}-\vec{b}) d^2s \, .
+\eeq
+%%%%%%%%
+
+The total cross section for $pA$ is given as,
+%%%%%%%
+\beq
+\sigma^{pA}_{tot} =\int  2 \pi b  (1-e^{T_{pA} (b) \sigma^{NN}_{inel}}) db \, ,
+\eeq
+%%%%%%%%
+where $\sigma^{NN}_{inel}$ is the nucleon-nucleon inelastic cross section ($\sigma^{NN}_{inel}$ = 67.6 millibarn for 5.023 TeV collision with A = 208, Pb) \cite{Loizides:2017ack}. Note, 1 mb = 0.1 $\text{fm}^2$.
+
+
+Number of participating nucleons is obtained by using these thickness functions as,
+%%%%%%%
+\beq
+N^{pA}_{part}(b) = \int \{T_A(\vec{s}) \sigma^{NN}_{inel} T_p(\vec{s}-\vec{b}) + T_p(\vec{s})[1-(1-T_A(\vec{s})\sigma^{NN}_{inel})]\} d^2s \, .
+\eeq
+%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{a. Defining Centrality Classes:}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Centrality classes are defined based on the integral of the normalized inelastic cross-section as a function of the impact parameter \( b \):
+\[
+\frac{d\sigma_{\text{inel}}^{pA}}{db} \propto 2 \pi b \left( 1 - e^{-T_{pA}(b) \sigma^{NN}_{\text{inel}}} \right),
+\]
+where \( T_{pA}(b) \) is the nuclear thickness function for the proton-nucleus collision, and \( \sigma^{NN}_{\text{inel}} \) is the nucleon-nucleon inelastic cross-section.
+
+To define centrality classes, we divide the inelastic cross-section into fractions:
+\[
+c_{\text{min}} \leq \frac{\sigma^{pA}(b)}{\sigma^{pA}_{\text{tot}}} \leq c_{\text{max}},
+\]
+where \( c_{\text{min}} \) and \( c_{\text{max}} \) are the lower and upper bounds for a given centrality class. For example, 0–10\% centrality corresponds to the top 10\% of the total cross-section.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{b. Impact Parameter \( b \) as a Function of Centrality:}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The impact parameter \( b \) corresponding to a given centrality class can be found by solving:
+\[
+\sigma^{pA}(b) = 2 \pi \int_0^b b' \left( 1 - e^{-T_{pA}(b') \sigma^{NN}_{\text{inel}}} \right) db'.
+\]
+For a given centrality class \( [c_{\text{min}}, c_{\text{max}}] \), the bounds on the impact parameter are obtained by finding \( b_{\text{min}} \) and \( b_{\text{max}} \) such that:
+\[
+c_{\text{min}} = \frac{\sigma^{pA}(b_{\text{min}})}{\sigma^{pA}_{\text{tot}}},
+\quad
+c_{\text{max}} = \frac{\sigma^{pA}(b_{\text{max}})}{\sigma^{pA}_{\text{tot}}}.
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{c. Average Impact Parameter \( \langle b \rangle \) for a Centrality Class}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The average impact parameter \( \langle b \rangle \) in a given centrality class is calculated as:
+\[
+\langle b \rangle_{[c_{\text{min}}, c_{\text{max}}]} = \frac{2 \pi \int_{b_{\text{min}}}^{b_{\text{max}}} b^2 \left( 1 - e^{-T_{pA}(b) \sigma^{NN}_{\text{inel}}} \right) db}{\sigma^{pA}(c_{\text{min}}, c_{\text{max}})},
+\]
+where \( \sigma^{pA}(c_{\text{min}}, c_{\text{max}}) \) is the integrated cross-section for the centrality class.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{d. Average Number of Participants \( \langle N_{\text{part}} \rangle \)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The average number of participants \( \langle N_{\text{part}} \rangle \) in a centrality class is computed using the nuclear thickness functions as:
+\[
+N_{\text{part}}(b) = \int T_A(\vec{s}) \sigma^{NN}_{\text{inel}} T_p(\vec{s} - \vec{b}) d^2 s,
+\]
+where \( T_A(\vec{s}) \) and \( T_p(\vec{s}) \) are the nuclear and proton thickness functions, respectively.
+
+For a given centrality class \( [c_{\text{min}}, c_{\text{max}}] \), the average number of participants is:
+\[
+\langle N_{\text{part}} \rangle_{[c_{\text{min}}, c_{\text{max}}]} = \frac{2 \pi \int_{b_{\text{min}}}^{b_{\text{max}}} b \, N_{\text{part}}(b) \left( 1 - e^{-T_{pA}(b) \sigma^{NN}_{\text{inel}}} \right) db}{\sigma^{pA}(c_{\text{min}}, c_{\text{max}})}.
+\]
+
+
+
+For the LHC $p-A$ collision, using the Glauber model, at a given impact parameter $\textbf{b}$, the number of participating nucleons $N_{part}$ in the target nucleus is given by the binomial distribution as,
+\beq
+P(N_{part}) = \frac{d \mathbf{b} \binom{A}{N_{part}} [1-p_{pA}(\mathbf{b})]^{A-N_{part}}}{\int d\mathbf{b}} \, , 
+\eeq
+
+
+In the minimum-bias $p-A$ collision case ($N_1 = 1, N_2 = A $), the effective path length $L_{eff}$ is related to the number of participating nucleons $N_{part} = \rho \sigma dz$, where $\sigma$ is the cross section for having non-zero broadening in parton-nucleon scattering, we obtain
+
+\beq
+    L_{eff} =  L_p + \frac{N_{part}-1}{\rho_0 \sigma}
+\eeq
+
+For minimum bias $p-A$ collisions, the average of $N_{part}$ in the events with $J/\psi$ production can be calculated within Glauber theory as
+
+\beq
+    \langle{N_{part}}\rangle_{J/\psi} = 1 + \sigma \frac{(A-1)}{A^2} \int d^2 \vec{b} T_A(b)^2
+\eeq
+where, by normalization $\int d^3 \vec{r} \rho(r) = \int d^2 \vec{b} T_A(b) = A$. The effective path length becomes,
+
+\beq
+    L_{eff} =  L_p +  \frac{(A-1)}{A^2 \rho_0} \int d^2 \vec{b} T_A(b)^2
+\eeq
+
+%%%%
+\section{Combining Cold Nuclear Matter Effect and Hot Nuclear Matter Effects}
+%%%%%%
+After we calculate the bottomonium suppression due to cold and hot nuclear matter, we combine all the effects to obtain the total nuclear modification factor for the quarkonium state in the p-Pb collisions. We model the net quarkonium suppression in pA collisions compared to the pp collision as
+%%
+\beq
+\mathcal{R}^{\Upsilon}_{pA} = {R}^{CNM}_{pA}  \times  \mathcal{R}^{HNM}_{pA} \, ,
+\eeq
+%
+where 
+%
+\beq
+{R}^{CNM}_{pA} = {R}^{nPDF}_{pA} 
+ \times \mathcal{R}^{E Loss}_{pA} \times  \mathcal{R}^{Broad}_{pA} \, ,
+\eeq
+%
+is the nuclear modification factor due to the cold nuclear matter, ${R}^{nPDF}_{pA}$ being the nuclear modifications of the full nuclear PDFs in p-Pb collision with respect to pp collision, $\mathcal{R}^{E Loss}_{pA}$ being the nuclear suppression due to the energy loss of heavy quarkonium, and $\mathcal{R}^{Broad}_{pA}$ being that due to the momemtum broadening of bottomonium in the cold nuclear matter.  
+
+Finally, we can implement the effect of feed down.
+
+
+
+%%%%
+\section{Model for A-B Collision}
+%
+Note: Incorporating Ramona Vogt's Model -- AA Collision. We will add Ramona Vogt's model to move forward with AA collision \cite{Vogt:2010aa}, \cite{Arleo:2014oha}, \cite{Andronic:2015wma}.
+
+\subsection{y differential Energy Loss}
+In order to model the coherent energy loss in the A-B collisions, we use previous model for p-A collisions -- here A is the projectile nucleus and B is the target nucleus. As the gluon radiation induced by the re-scattering in the projectile nuclei A and target nuclei B occurs in distinct regions of phase space, it can be combined in a probabilistic manner. To do so, we first express the quarkonium $\psi$ production cross section in A-B as %a function of that in A-p collisions using previous equation \eqref{eq:single_diff} as
+%
+\beq
+\frac{1}{A B}\frac{\dd\sigma_{\mathrm{AB}}^{\psi}}{\dd y}\left(y, \sqrt{s} \right)  = \int_0^{\delta y_{\rm max}(y)} \dd \delta y_B \,\hat{\cal P}(e^{\delta y_B} - 1, \ell_B^2) \frac{1}{A} \frac{\dd\sigma_{\mathrm{Ap}}^{\psi}}{\dd y} \left( y + \delta y_B, \sqrt{s}\right) ,
+\label{eq:ABcol1}
+\eeq
+%
+where $\delta y_{\rm max}(y) \, = \, \text{min} \, (\ln \, 2,y_{\rm max}-y), \, y_{\rm max} = \ln \, (\sqrt{s}/M_\perp) $ is the maximum quarkonium rapidity in the A-B COM frame, $\ell_B = \sqrt{\hat{q} L_B}$ is the transverse momentum broadening in terms of the transport coefficient $\hat{q}$ and the path length $L_B$ traversed through the target nucleus B, as given by Eq.~\eqref{eq:L_A}. Expressing the A-p cross section as a function of that in p-p collisions, from Eq.~\eqref{eq:ABcol1} one obtains
+%
+\bqa
+\frac{1}{A B}\frac{\dd\sigma_{\mathrm{AB}}^{\psi}}{\dd y}\left(y, \sqrt{s} \right)  &=& \int_0^{\delta y_{\rm max}(y)} \dd {\delta y}_B \,\hat{\cal P}(e^{{\delta y}_B} - 1, \ell_B^2) \int_0^{\delta y_{\rm max}(- y)} \dd {\delta y}_A \,\hat{\cal P}(e^{\delta y_A} - 1, \ell_A^2) \nonumber \\ 
+&& \quad \quad \times \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y} \left( y + {\delta y}_B  - {\delta y}_A , \sqrt{s}\right)  ,
+\label{eq:ABcol2}
+\eqa
+%
+where $\dd\sigma_{\mathrm{pp}}^{\psi}/\dd y$ is an even function of the rapidity. Using this equation \eqref{eq:ABcol2}, we can compute the nuclear suppression factor in the minimum bias heavy-ion collisions.
+
+%%%%%%%%%%
+\subsection{$p_T$ differential Energy Loss}
+%%%%%%%%%%%%
+
+In order to model the coherent energy loss in the A-B collisions, we use previous model for p-A collisions -- here A is the projectile nucleus and B is the target nucleus. As the gluon radiation induced by the re-scattering in the projectile nuclei A and target nuclei B occurs in distinct regions of phase space, it can be combined in a probabilistic manner. To do so, we first express the quarkonium $\psi$ production cross section in A-B simply as a function of that in A-p collisions using previous Eq.~\eqref{eq:dcs_ypt2} as
+%
+\beq
+\frac{1}{A B}\frac{\dd\sigma_{\mathrm{AB}}^{\psi}}{\dd y \, \dd^2 p_T}\left(y,  p_T \right)  = \int_{0}^{2\pi} \frac{\dd \varphi_B}{2\pi} \int_0^{\delta y_{\rm max}(y)} \dd \delta y_B \,\hat{\cal P}(e^{\delta y_B} - 1, \ell_B^2) \frac{1}{A} \frac{\dd\sigma_{\mathrm{Ap}}^{\psi}}{\dd y \, \dd^2 p_T} \left( y + \delta y_B, |\vec{p}_T - \delta \vec{p}_{T,B}| \right) ,
+\label{eq:ABcolpt1}
+\eeq
+%
+From Eq.~\eqref{eq:dcs_ypt2}, A-p cross section term in the integral in Eq.~\eqref{eq:ABcolpt1} can be expressed as a function of that in p-p collisions,
+%
+\bqa
+\frac{1}{A}\frac{\dd\sigma_{\mathrm{Ap}}^{\psi}}{\dd y \, \dd^2 p_T}\left(y + \delta y_B, p_T - {\delta p_T}_B \right) = && \int_{0}^{2\pi} \frac{\dd \varphi_A}{2\pi} \int_0^{\delta y_{\rm max}(- y)} \dd {\delta y}_A \,\hat{\cal P}(e^{{\delta y}_A} - 1, \ell_A^2) \nonumber \\
+&& \quad \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y \, \dd^2 p_T} \left( y + {\delta y}_B  - {\delta y}_A , |\vec{p}_T - \delta \vec{p}_{T,A} - \delta \vec{p}_{T,B}|\right) .
+\label{eq:dcs_shiftedPt}
+\eqa
+%
+where $\delta y_{\rm max}(y) \, = \, \text{min} \, (\ln \, 2,y_{\rm max}-y), \, y_{\rm max} = \ln \, (\sqrt{s}/M_\perp) $ is the maximum quarkonium rapidity in the A-B COM frame, $\ell_B = \sqrt{\hat{q} L_B}$ is the transverse momentum broadening in terms of the transport coefficient $\hat{q}$ and the path length $L_B$ traversed through the target nucleus B, as given by Eq.~\eqref{eq:L_A}. Using Eq.~\eqref{eq:dcs_shiftedPt} in Eq.~\eqref{eq:ABcolpt1}, we obtain
+%
+\bqa
+\frac{1}{A B}\frac{\dd\sigma_{\mathrm{AB}}^{\psi}}{\dd y \, \dd^2 p_T}\left(y,  p_T \right) &=& \int_{0}^{2\pi} \frac{\dd \varphi_A}{2\pi} \int_{0}^{2\pi} \frac{\dd \varphi_B}{2\pi} \int_0^{\delta y_{\rm max}(y)} \dd {\delta y}_B \, \int_0^{\delta y_{\rm max}(- y)} \dd {\delta y}_A \, \hat{\cal P}(e^{{\delta y}_B} - 1, \ell_B^2) \nonumber \\ 
+&& \times \; \hat{\cal P}(e^{\delta y_A} - 1, \ell_A^2) \; \frac{\dd\sigma_{\mathrm{pp}}^{\psi}}{\dd y \, \dd^2 p_T} \left( y + {\delta y}_B  - {\delta y}_A , |\vec{p}_T - \delta \vec{p}_{T,A} - \delta \vec{p}_{T,B}|\right) , \nonumber \\
+\label{eq:ABcolpt2}
+\eqa
+%
+where $\dd\sigma_{\mathrm{pp}}^{\psi}/\dd y \, \dd^2 p_T$ is p-p cross section. Using this Eq.~\eqref{eq:ABcolpt2}, we can compute the nuclear suppression factor in different centrality classes of heavy-ion collisions.
+
+
+
+\section{Running Coupling}
+In our calculation, equation \ref{eq:quenching-dilog} and so the suppression factor depend on the QCD coupling $\alpha_s$.  We can calculate this from the Particle Data Group (PDG) \cite{pdg:2022pth, Deur:2016tte}. As calculated in the perturbative QCD (pQCD) framework, the predictions for physical observables are expressed in terms of the renormalized coupling $\alpha_s(\mu^2)$ which is a function of an (unphysical) renormalization scale $\mu_R$. When one takes $\mu$ close to the scale of the momentum transfer $Q$ in a given process, then $\alpha_s(\mu^2 \simeq Q^2)$ is indicative of the effective strength of the strong interaction in that process. The dependence of $\alpha_s(Q^2)$ on momentum transfer $Q$ encodes the underlying dynamics of hadron physics from color confinement in the infrared domain to asymptotic freedom at short distances. The coupling satisfies the following renormalization group equation (RGE) \cite{pdg:2022pth}, by the definition of the 4-dimensional $\beta$-function \cite{vanRitbergen:1997va}
+%%%
+\beq
+\frac{\partial a_s}{\partial \ln \mu^2} = \mu^2 \frac{\dd a_s}{\dd \mu^2} = \frac{\mu}{2} \frac{\dd a_s}{\dd \mu} = \beta(a_s) = - \beta_0 a_s^2 - \beta_1 a_s^3 - \beta_2 a_s^4 - \beta_3 a_s^5 + O(a_s^6)  \, ,
+\eeq
+%%%
+where $a_s = \frac{\alpha_s}{4 \pi} = \frac{g^2}{16 \pi^2}$, $g = g(\mu^2)$ is the generalized strong coupling constant of the standard QCD langrangian, $\mu$ is the 't Hooft unit of mass, the renormalization point in the the minimal subtraction (MS) scheme. Also, the coefficients $\beta_0$ is referred to as the 1-loop $\beta$-function coefficient, the 2-loop $\beta$-function coefficient is  $\beta_1$, the 3-loop coefficient is $\beta_2$ and the 4-loop coefficient is $\beta_3$ for the $SU(3)$. For QCD ($SU(3)$) the color factor is $N_c = 3$, values of the color factor associated with gluon emission from a gluon is equal to $C_A = N_c = 3$, the color factor (“Casimir”) associated with gluon emission from a quark being $C_F = \frac{N_c^2-1}{2N_c} = \frac{4}{3}$, and $T_F = 1/2$ being the color factor for a gluon to split into a $q\Bar{q}$ pair. These coefficients can be mathematically written as \cite{vanRitbergen:1997va}
+%%%
+\bqa
+&& \beta_0 = 11 - \frac{2}{3} n_f \\
+&& \beta_1 = 102 - \frac{38}{3} n_f  \\
+&& \beta_2 = \frac{2857}{2} - \frac{5033}{18} n_f + 
+\frac{325}{54} n_f^2 \\ 
+&& \beta_3 = \left( \frac{149753}{6} + 3564\zeta_3 \right) - \left( \frac{1078361}{162} + \frac{6508}{27} \zeta_3 \right) n_f \nonumber \\ 
+&& \qquad + \left( \frac{50065}{162} +  \frac{6472}{81}\zeta_3  \right) n_f^2 + \frac{1093}{729}n_f^3
+\eqa
+%%%
+Here, $n_f = 3$ is the number of quark flavours.These are the analytical four-loop result for the QCD $\beta$-function using dimensional regularization and the MS-scheme.
+
+A convenient approximate analytic solution to the RGE that includes the terms upto the 4-loop calculation is given by equation (9.5) in \cite{vanRitbergen:1997va}.
+
+
+\section{Quenching Weight}
+Source: \href{https://arxiv.org/pdf/hep-ph/0302184.pdf}{"Calculating Quenching Weights"} 
+The collisional jet energy loss was first studied by Bjorken in 1982 \href{https://lss.fnal.gov/archive/1982/pub/Pub-82-059-T.pdf}{"Energy loss of energetic partons in QGP"}, also \href{https://arxiv.org/pdf/hep-ph/0209038.pdf}{this}, and \href{https://doi.org/10.1103/PhysRevD.25.746}{this}. 
+
+High energy quarks and gluons propagating through QGP medium suffer differential energy loss via elastic scattering from quanta in the plasma. 
+
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{bibliography/sample,bibliography/inspirehep,bibliography/noninspirehep}
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
